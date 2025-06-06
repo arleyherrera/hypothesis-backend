@@ -1,5 +1,9 @@
-// ===== vectorContextService.js - Versión mejorada con fallback automático =====
+// ===== vectorContextService.js - Proxy para mantener compatibilidad =====
 
 require('dotenv').config();
 
-// Intentar importar la versión completa, si falla usar fallback
+// Importar la nueva clase modularizada
+const VectorContextService = require('./vectorContext');
+
+// Crear y exportar una instancia única (singleton)
+module.exports = new VectorContextService();

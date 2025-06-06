@@ -25,6 +25,8 @@
     "@langchain/openai": "^0.5.10",
     "axios": "^1.9.0",
     "bcryptjs": "^2.4.3",
+    "bootstrap": "^5.3.6",
+    "bootstrap-react": "^0.5.0-alpha.14",
     "chromadb": "^2.4.6",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
