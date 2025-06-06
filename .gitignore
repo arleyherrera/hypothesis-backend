@@ -1,0 +1,104 @@
+# Variables de entorno - MUY IMPORTANTE
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# Build y compilación
+dist/
+build/
+out/
+.cache/
+.parcel-cache/
+
+# Base de datos local
+*.sqlite
+*.sqlite3
+*.db
+
+# Archivos temporales
+tmp/
+temp/
+.tmp/
+*.tmp
+*.temp
+
+# Coverage de tests
+coverage/
+.nyc_output/
+*.lcov
+
+# Archivos de respaldo
+*.bak
+*.backup
+*~
+
+# Archivos específicos del proyecto
+testChroma.js
+test-*.js
+TODO.md
+.notes/
+notes.txt
+
+# Carpetas de uploads (si las tienes)
+uploads/
+public/uploads/
+
+# Certificados SSL locales
+*.pem
+*.key
+*.crt
+
+# Archivos de configuración local
+config/local.js
+config/local.json
+
+# ChromaDB local
+chroma_db/
+.chroma/
+
+# Otros
+.env.vault
+.vercel
+.netlify
