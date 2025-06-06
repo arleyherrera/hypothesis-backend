@@ -13,9 +13,10 @@ let sequelize;
 // Manejo especial para producción con DATABASE_URL
 if (env === 'production' && process.env.DATABASE_URL) {
   // Usar DATABASE_URL directamente
+  
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
-    protocol: 'postgres',
+    protocol: 'postgres', 
     dialectOptions: {
       ssl: {
         require: true,

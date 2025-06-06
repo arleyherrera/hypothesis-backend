@@ -7,6 +7,7 @@ module.exports = {
     database: process.env.DB_NAME || 'hypothesis_manager',
     host: process.env.DB_HOST || '127.0.0.1',
     dialect: 'postgres',
+    port: process.env.DATABASE_PORT,
     logging: false
   },
   test: {
@@ -14,6 +15,7 @@ module.exports = {
     password: process.env.DB_PASSWORD || 'postgres',
     database: process.env.DB_NAME || 'hypothesis_manager_test',
     host: process.env.DB_HOST || '127.0.0.1',
+    port: process.env.DATABASE_PORT,
     dialect: 'postgres',
     logging: false
   },
