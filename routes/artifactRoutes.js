@@ -16,6 +16,9 @@ router.route('/:hypothesisId')
 router.post('/:hypothesisId/generate/:phase', artifactController.generateArtifacts);
 router.post('/:hypothesisId/generate-ai/:phase', aiController.generateArtifactWithAI);
 
+// NUEVA RUTA PARA MEJORAR TODOS
+router.post('/:hypothesisId/improve-all/:phase', aiController.improveAllArtifactsWithAI);
+
 // Rutas de artefactos individuales
 router.route('/:id')
   .put(artifactController.updateArtifact)

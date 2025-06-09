@@ -303,6 +303,104 @@ Mejora este artefacto para que sea:
   }
 };
 
+// NUEVA FUNCIÓN: Mejorar todos los artefactos de una hipótesis/fase
+const improveAllArtifactsWithAI = async (req, res) => {
+  try {
+    const { hypothesisId, phase } = req.params;
+    logOperation('Mejorando todos los artefactos con IA', { hypothesisId, phase });
+    
+    if (!AI_CONFIG.API_KEY) {
+      return res.status(500).json({ message: 'No se ha configurado la clave API para el servicio de IA' });
+    }
+    
+    // Obtener TODOS los artefactos de esta fase
+    const artifacts = await Artifact.findAll({
+      where: { 
+        hypothesisId, 
+        phase 
+      },
+      include: [{ model: Hypothesis, as: 'hypothesis' }]
+    });
+    
+    if (!artifacts.length) {
+      return res.status(404).json({ message: 'No hay artefactos para mejorar' });
+    }
+    
+    // Verificar autorización
+    if (artifacts[0].hypothesis.userId !== req.user.id) {
+      return res.status(403).json({ message: 'No autorizado' });
+    }
+    
+    const hypothesis = artifacts[0].hypothesis;
+    const improvedArtifacts = [];
+    
+    // Mejorar cada artefacto
+    for (const artifact of artifacts) {
+      try {
+        // Si ya fue mejorado, saltar
+        if (artifact.name.includes('(Mejorado)')) {
+          improvedArtifacts.push(artifact);
+          continue;
+        }
+        
+        // Prompt simple para SOLO agregar contenido adicional
+        const appendPrompt = `
+Hipótesis:
+- Problema: ${hypothesis.problem}
+- Solución: ${hypothesis.solution}
+- Segmento: ${hypothesis.customerSegment}
+- Propuesta de valor: ${hypothesis.valueProposition}
+
+Artefacto actual "${artifact.name}" de la fase "${phase}":
+${artifact.content}
+
+INSTRUCCIONES CRÍTICAS:
+- NO modifiques ni reescribas el contenido existente
+- SOLO genera 2-3 párrafos ADICIONALES que complementen lo que ya existe
+- Agrega información práctica, ejemplos específicos o métricas relevantes
+- Mantén el mismo tono y estilo del artefacto original
+- NO incluyas títulos ni subtítulos
+- NO repitas información ya mencionada
+
+Genera ÚNICAMENTE el contenido adicional (2-3 párrafos):`;
+        
+        const aiResponse = await createAIRequest(appendPrompt);
+        const additionalContent = aiResponse.data.choices[0].message.content;
+        
+        // Agregar separador visual y contenido adicional
+        const separator = '\n\n---\n\n**✨ Información Adicional:**\n\n';
+        const improvedContent = artifact.content + separator + additionalContent;
+        
+        // Actualizar el artefacto
+        await artifact.update({
+          content: improvedContent,
+          name: `${artifact.name} (Mejorado)`
+        });
+        
+        // IMPORTANTE: Actualizar contexto vectorial para mantener coherencia
+        await vectorContextService.updateArtifactContext(artifact);
+        
+        improvedArtifacts.push(artifact);
+        
+        // Pequeña pausa para no sobrecargar la API
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+      } catch (error) {
+        console.error(`Error mejorando artefacto ${artifact.id}:`, error);
+      }
+    }
+    
+    res.json({ 
+      message: `${improvedArtifacts.length} artefactos mejorados exitosamente`,
+      artifacts: improvedArtifacts,
+      phase: phase
+    });
+    
+  } catch (error) {
+    handleError(res, error, 'Error al mejorar artefactos con IA');
+  }
+};
+
 const getContextStats = async (req, res) => {
   try {
     const { hypothesisId } = req.params;
@@ -441,6 +539,7 @@ const useFallbackGenerator = async (req, res) => {
 module.exports = {
   generateArtifactWithAI,
   improveArtifactWithAI,
+  improveAllArtifactsWithAI,
   getContextStats,
   getCoherenceReport
 };
