@@ -35,20 +35,22 @@ const buildBasePrompt = (phase, hypothesisData, artifactName) => `
 Actúa como un consultor experto especializado en metodología Lean Startup con más de 10 años de experiencia.
 Estás generando un artefacto específico llamado "${artifactName}" para la fase de "${phase}".
 
+PROBLEMA CENTRAL A RESOLVER:
+${hypothesisData.problem}
+
 DETALLES DE LA HIPÓTESIS:
-- Nombre: ${hypothesisData.name}
-- Problema: ${hypothesisData.problem}
-- Solución: ${hypothesisData.solution}
+- Solución Propuesta: ${hypothesisData.solution}
 - Segmento de Clientes: ${hypothesisData.customerSegment}
 - Propuesta de Valor: ${hypothesisData.valueProposition}
+- Nombre del Proyecto: ${hypothesisData.name}
 
 IMPORTANTE: 
-- Este artefacto debe estar COMPLETAMENTE BASADO en la hipótesis anterior
-- Usa los detalles específicos del problema, solución, segmento y propuesta de valor
-- NO generes ejemplos genéricos, todo debe ser específico para esta hipótesis
-- Mantén coherencia con el trabajo previo y prepara el terreno para las fases siguientes
+- Este artefacto debe estar COMPLETAMENTE BASADO en el PROBLEMA descrito arriba
+- TODO el contenido debe partir del problema como punto central
+- La solución y todos los elementos deben responder directamente a este problema
+- NO generes ejemplos genéricos, todo debe ser específico para ESTE problema
 
-Genera contenido detallado y personalizado basándote ÚNICAMENTE en esta hipótesis específica.
+Genera contenido detallado y personalizado basándote en el problema específico identificado.
 `;
 
 const getContextualPrompt = async (hypothesisId, phase, artifactName) => {
@@ -131,11 +133,12 @@ const generatePrompt = async (phase, hypothesisData, artifactName) => {
   
   return `${basePrompt}${contextPrompt}${transitionPrompt}\n\n${specificPrompt}\n
 INSTRUCCIONES FINALES CRÍTICAS:
-- TODO el contenido DEBE basarse en la hipótesis proporcionada arriba
-- Usa ESPECÍFICAMENTE el problema: "${hypothesisData.problem}"
-- Desarrolla para el segmento: "${hypothesisData.customerSegment}"
-- Implementa la solución: "${hypothesisData.solution}"
-- Entrega la propuesta de valor: "${hypothesisData.valueProposition}"
+- TODO el contenido DEBE basarse en el problema: "${hypothesisData.problem}"
+- Cada sección debe explicar cómo aborda aspectos específicos del problema
+- Usa el problema como punto de partida para cada análisis
+- La solución "${hypothesisData.solution}" debe responder directamente al problema
+- El segmento "${hypothesisData.customerSegment}" debe ser quien experimenta este problema
+- La propuesta de valor "${hypothesisData.valueProposition}" debe resolver este problema
 - NO inventes información, usa SOLO lo proporcionado en la hipótesis
 - Utiliza formato markdown para estructurar tu respuesta
 - Longitud mínima: 800 palabras

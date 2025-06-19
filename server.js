@@ -231,5 +231,10 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-// Iniciar servidor
-startServer();
+// Iniciar servidor solo si no está siendo importado
+if (require.main === module) {
+  startServer();
+}
+
+// Exportar app para testing
+module.exports = app;

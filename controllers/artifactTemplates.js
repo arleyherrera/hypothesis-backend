@@ -1,4 +1,4 @@
-// Archivo separado para mantener los templates y reducir el tamaño de aiController
+// Archivo completo controllers/artifactTemplates.js
 
 const artifactTypes = {
   construir: [
@@ -44,36 +44,73 @@ const artifactTypes = {
 };
 
 const getTemplatesForPhase = (phase) => {
-  // Aquí irían los templates completos de artifactController.js
-  // Por brevedad, retorno estructura básica
   return artifactTypes[phase] || [];
 };
 
 const getSpecificPrompt = (phase, artifactName) => {
-  // Aquí irían los prompts específicos de aiController.js
-  return `Genera contenido detallado y personalizado para ${artifactName} en la fase ${phase}.`;
+  // Importar los prompts específicos
+  try {
+    const { getSpecificPrompt: specificPromptGetter } = require('./aiPrompts');
+    return specificPromptGetter(phase, artifactName);
+  } catch (error) {
+    // Si no se puede importar, usar un prompt genérico
+    return `Genera contenido detallado y personalizado para ${artifactName} en la fase ${phase}.
+    
+    IMPORTANTE: Basa TODO el contenido en la hipótesis específica proporcionada.
+    Incluye:
+    1. Introducción al propósito del artefacto
+    2. Análisis de la situación actual
+    3. Recomendaciones específicas y accionables
+    4. Ejemplos concretos
+    5. Próximos pasos claros
+    
+    Utiliza formato markdown para estructurar tu respuesta.`;
+  }
 };
 
 const getDefaultContent = (phase, artifactName, hypothesisData) => {
-  return `# ${artifactName} para ${hypothesisData.name}
+  return `# ${artifactName}
 
-## Contexto
-Este artefacto proporciona un marco básico para la fase de ${phase}.
-
-## Problema
+## Problema Central que Abordamos
 ${hypothesisData.problem}
 
-## Solución propuesta
+---
+
+## Contexto de la Hipótesis
+**Proyecto:** ${hypothesisData.name}
+**Fase actual:** ${phase}
+
+## Solución Propuesta
 ${hypothesisData.solution}
 
-## Próximos pasos
-1. Personalizar este artefacto según las necesidades específicas
-2. Implementar las recomendaciones sugeridas
-3. Validar con datos reales
+## Segmento Objetivo
+${hypothesisData.customerSegment}
 
-**Nota**: Este es un artefacto plantilla. Para contenido personalizado, utilice la generación con IA.`;
+## Propuesta de Valor
+${hypothesisData.valueProposition}
+
+## Desarrollo del Artefacto
+
+Este artefacto se desarrolla específicamente para abordar el problema identificado arriba.
+
+### Análisis del Problema
+[Análisis detallado de cómo este artefacto ayuda a resolver el problema]
+
+### Implementación
+[Detalles de implementación específicos para el problema]
+
+### Métricas de Éxito
+[Cómo mediremos si estamos resolviendo el problema efectivamente]
+
+## Próximos Pasos
+1. Validar que este artefacto responde directamente al problema
+2. Medir el impacto en la solución del problema
+3. Iterar basándose en los aprendizajes
+
+**Nota**: Este es un artefacto plantilla. Para contenido personalizado que profundice en el problema específico, utilice la generación con IA.`;
 };
 
+// IMPORTANTE: Exportar todo correctamente
 module.exports = {
   artifactTypes,
   getTemplatesForPhase,

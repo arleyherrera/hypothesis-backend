@@ -10,6 +10,7 @@ class ContextGeneration {
   // Módulo de generación de contexto
   generateArtifactContext(artifact) {
     const contextParts = [
+      this.generateProblemContext(artifact), // Problema primero
       this.generateBasicInfo(artifact),
       this.generateContentSummary(artifact),
       this.generateKeywordsSection(artifact),
@@ -27,8 +28,9 @@ Fase actual: ${artifact.phase}`;
   }
 
   generateBasicInfo(artifact) {
-    return `Nombre: ${artifact.name}
+    return `Problema abordado: ${artifact.hypothesis?.problem || 'No especificado'}
 Fase: ${artifact.phase}
+Nombre del artefacto: ${artifact.name}
 Descripción: ${artifact.description}`;
   }
 
@@ -43,9 +45,22 @@ Fecha: ${artifact.createdAt}`;
     return `Palabras clave: ${keywords}`;
   }
 
+  generateProblemContext(artifact) {
+    if (artifact.hypothesis && artifact.hypothesis.problem) {
+      return `PROBLEMA CENTRAL: ${artifact.hypothesis.problem}
+====================================
+Este artefacto aborda específicamente el problema identificado arriba.
+====================================`;
+    }
+    return '';
+  }
+
   // Construcción de queries
-  buildSearchQuery(phase, artifactName) {
-    return `${artifactName} ${phase} metodología lean startup`;
+  buildSearchQuery(phase, artifactName, problem) {
+    // Extraer palabras clave del problema
+    const problemKeywords = problem ? 
+      this.textProcessor.extractKeywords(problem).split(', ').slice(0, 3).join(' ') : '';
+    return `${problemKeywords} ${artifactName} ${phase} metodología lean startup problema`;
   }
 
   // Creación de metadata

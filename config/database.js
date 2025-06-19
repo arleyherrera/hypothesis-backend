@@ -13,7 +13,7 @@ module.exports = {
   test: {
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres',
-    database: process.env.DB_NAME || 'hypothesis_manager_test',
+    database: process.env.DB_NAME || 'hypothesis_manager',
     host: process.env.DB_HOST || '127.0.0.1',
     port: process.env.DATABASE_PORT,
     dialect: 'postgres',

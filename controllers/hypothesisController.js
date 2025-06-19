@@ -7,7 +7,8 @@ const findUserHypothesis = async (id, userId, includeArtifacts = false) => {
   return Hypothesis.findOne(options);
 };
 
-const hypothesisFields = ['name', 'problem', 'solution', 'customerSegment', 'valueProposition'];
+// CAMBIO: Problema primero en el orden de campos
+const hypothesisFields = ['problem', 'name', 'solution', 'customerSegment', 'valueProposition'];
 
 exports.getHypotheses = async (req, res) => {
   try {
@@ -40,14 +41,24 @@ exports.getHypothesisById = async (req, res) => {
 
 exports.createHypothesis = async (req, res) => {
   try {
-    logOperation('Creando hipótesis', req.body);
+    // CAMBIO: Log enfocado en el problema
+    logOperation('Creando hipótesis para problema', { 
+      problem: req.body.problem ? req.body.problem.substring(0, 50) + '...' : 'No especificado',
+      userId: req.user.id 
+    });
     
-    // Corregido: pasar req.body primero, luego hypothesisFields
     const validation = validateRequiredFields(req.body, hypothesisFields);
     if (!validation.isValid) {
       return res.status(400).json({ 
         message: 'Campos requeridos faltantes',
         missingFields: validation.missingFields 
+      });
+    }
+    
+    // CAMBIO: Validación adicional del problema
+    if (req.body.problem && req.body.problem.length < 20) {
+      return res.status(400).json({ 
+        message: 'El problema debe tener al menos 20 caracteres para ser suficientemente específico' 
       });
     }
     
@@ -70,6 +81,13 @@ exports.updateHypothesis = async (req, res) => {
     const hypothesis = await findUserHypothesis(id, req.user.id);
     if (!hypothesis) return res.status(404).json({ message: 'Hipótesis no encontrada' });
     
+    // CAMBIO: Validar problema si se está actualizando
+    if (req.body.problem && req.body.problem.length < 20) {
+      return res.status(400).json({ 
+        message: 'El problema debe tener al menos 20 caracteres' 
+      });
+    }
+    
     await hypothesis.update(req.body);
     res.json(hypothesis);
   } catch (error) {
@@ -85,8 +103,31 @@ exports.deleteHypothesis = async (req, res) => {
     const hypothesis = await findUserHypothesis(id, req.user.id);
     if (!hypothesis) return res.status(404).json({ message: 'Hipótesis no encontrada' });
     
+    // IMPORTANTE: Eliminar primero todos los artefactos asociados
+    const deletedArtifacts = await Artifact.destroy({
+      where: { hypothesisId: id }
+    });
+    
+    logOperation('Artefactos eliminados', { count: deletedArtifacts });
+    
+    // También eliminar los contextos si existen
+    try {
+      const { ArtifactContext } = require('../models');
+      if (ArtifactContext) {
+        const deletedContexts = await ArtifactContext.destroy({
+          where: { hypothesisId: id }
+        });
+        logOperation('Contextos eliminados', { count: deletedContexts });
+      }
+    } catch (e) {
+      // Si no existe el modelo ArtifactContext, continuar
+      console.log('ArtifactContext no encontrado, continuando...');
+    }
+    
+    // Ahora sí eliminar la hipótesis
     await hypothesis.destroy();
-    res.json({ message: 'Hipótesis eliminada' });
+    
+    res.json({ message: 'Hipótesis eliminada correctamente' });
   } catch (error) {
     handleError(res, error, 'Error al eliminar hipótesis');
   }
