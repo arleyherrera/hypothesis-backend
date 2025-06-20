@@ -103,28 +103,41 @@ exports.deleteHypothesis = async (req, res) => {
     const hypothesis = await findUserHypothesis(id, req.user.id);
     if (!hypothesis) return res.status(404).json({ message: 'Hipótesis no encontrada' });
     
-    // IMPORTANTE: Eliminar primero todos los artefactos asociados
+    // IMPORTANTE: Eliminar en el orden correcto para evitar violaciones de FK
+    
+    // 1. Primero obtener todos los artifactIds de esta hipótesis
+    const artifacts = await Artifact.findAll({
+      where: { hypothesisId: id },
+      attributes: ['id']
+    });
+    
+    const artifactIds = artifacts.map(a => a.id);
+    logOperation('Artefactos a eliminar', { count: artifactIds.length, ids: artifactIds });
+    
+    // 2. Eliminar ArtifactContexts que referencian estos artifacts
+    if (artifactIds.length > 0) {
+      try {
+        const { ArtifactContext } = require('../models');
+        if (ArtifactContext) {
+          const deletedContexts = await ArtifactContext.destroy({
+            where: { 
+              artifactId: artifactIds 
+            }
+          });
+          logOperation('Contextos de artefactos eliminados', { count: deletedContexts });
+        }
+      } catch (e) {
+        console.log('ArtifactContext no encontrado o error al eliminar:', e.message);
+      }
+    }
+    
+    // 3. Ahora sí eliminar los Artifacts
     const deletedArtifacts = await Artifact.destroy({
       where: { hypothesisId: id }
     });
-    
     logOperation('Artefactos eliminados', { count: deletedArtifacts });
     
-    // También eliminar los contextos si existen
-    try {
-      const { ArtifactContext } = require('../models');
-      if (ArtifactContext) {
-        const deletedContexts = await ArtifactContext.destroy({
-          where: { hypothesisId: id }
-        });
-        logOperation('Contextos eliminados', { count: deletedContexts });
-      }
-    } catch (e) {
-      // Si no existe el modelo ArtifactContext, continuar
-      console.log('ArtifactContext no encontrado, continuando...');
-    }
-    
-    // Ahora sí eliminar la hipótesis
+    // 4. Finalmente eliminar la hipótesis
     await hypothesis.destroy();
     
     res.json({ message: 'Hipótesis eliminada correctamente' });

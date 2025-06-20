@@ -3,17 +3,19 @@ const { body } = require('express-validator');
 const registerValidation = [
   body('name')
     .trim()
-    .isLength({ min: 2 })
-    .withMessage('El nombre debe tener al menos 2 caracteres'),
+    .isLength({ min: 2, max: 50 })
+    .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-']+$/)
+    .withMessage('Nombre inválido'),
+  
   body('email')
     .isEmail()
     .normalizeEmail()
-    .withMessage('Email inválido'),
+    .isLength({ max: 100 }),
+    
   body('password')
-    .isLength({ min: 6 })
-    .withMessage('La contraseña debe tener al menos 6 caracteres')
-    .matches(/\d/)
-    .withMessage('La contraseña debe contener al menos un número')
+    .isLength({ min: 8, max: 50 })
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/)
+    .withMessage('Contraseña no cumple requisitos de seguridad')
 ];
 
 const loginValidation = [

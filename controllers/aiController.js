@@ -539,10 +539,119 @@ const useFallbackGenerator = async (req, res) => {
   }
 };
 
+const generateHypothesisFromProblem = async (req, res) => {
+  try {
+    const { problem } = req.body;
+    logOperation('Generando hipótesis con IA desde problema', { userId: req.user.id });
+    
+    if (!problem || problem.length < 20) {
+      return res.status(400).json({ 
+        message: 'El problema debe tener al menos 20 caracteres' 
+      });
+    }
+    
+    if (!AI_CONFIG.API_KEY) {
+      return res.status(500).json({ 
+        message: 'Servicio de IA no disponible' 
+      });
+    }
+    
+    const prompt = `
+Actúa como un experto en Lean Startup y emprendimiento.
+
+PROBLEMA IDENTIFICADO:
+"${problem}"
+
+Basándote ÚNICAMENTE en este problema específico, genera 3 opciones diferentes de hipótesis completas. 
+Cada opción debe abordar el mismo problema pero con enfoques distintos.
+
+Para cada opción, genera:
+1. name: Un nombre descriptivo para la hipótesis (máximo 100 caracteres)
+2. solution: Una solución específica y detallada que resuelva directamente el problema
+3. customerSegment: El segmento de clientes específico que experimenta este problema
+4. valueProposition: La propuesta de valor única que diferencia esta solución
+
+IMPORTANTE:
+- Cada opción debe ser significativamente diferente en su enfoque
+- Las soluciones deben ser realizables y específicas
+- Los segmentos de clientes deben ser bien definidos
+- Todo debe estar directamente relacionado con el problema proporcionado
+
+Responde ÚNICAMENTE con un JSON válido en este formato:
+{
+  "options": [
+    {
+      "name": "nombre de la hipótesis 1",
+      "solution": "descripción detallada de la solución 1",
+      "customerSegment": "segmento específico 1",
+      "valueProposition": "propuesta de valor única 1"
+    },
+    {
+      "name": "nombre de la hipótesis 2",
+      "solution": "descripción detallada de la solución 2",
+      "customerSegment": "segmento específico 2",
+      "valueProposition": "propuesta de valor única 2"
+    },
+    {
+      "name": "nombre de la hipótesis 3",
+      "solution": "descripción detallada de la solución 3",
+      "customerSegment": "segmento específico 3",
+      "valueProposition": "propuesta de valor única 3"
+    }
+  ]
+}`;
+
+    const aiResponse = await createAIRequest(prompt);
+    const content = aiResponse.data.choices[0].message.content;
+    
+    // Intentar parsear la respuesta JSON
+    let hypothesisOptions;
+    try {
+      // Limpiar el contenido de posibles caracteres extra
+      const cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      hypothesisOptions = JSON.parse(cleanContent);
+    } catch (parseError) {
+      console.error('Error parseando respuesta de IA:', parseError);
+      console.error('Contenido recibido:', content);
+      
+      // Fallback: intentar generar opciones manualmente si el formato no es correcto
+      return res.status(500).json({ 
+        message: 'Error al procesar la respuesta de IA', 
+        error: 'Formato de respuesta inválido' 
+      });
+    }
+    
+    // Validar que tengamos las opciones esperadas
+    if (!hypothesisOptions.options || !Array.isArray(hypothesisOptions.options)) {
+      return res.status(500).json({ 
+        message: 'La IA no generó opciones válidas' 
+      });
+    }
+    
+    // Asegurar que cada opción incluya el problema original
+    const optionsWithProblem = hypothesisOptions.options.map(option => ({
+      ...option,
+      problem: problem // Incluir el problema original en cada opción
+    }));
+    
+    res.json({ 
+      message: 'Opciones de hipótesis generadas exitosamente',
+      problem: problem,
+      options: optionsWithProblem
+    });
+    
+  } catch (error) {
+    console.error('Error en generateHypothesisFromProblem:', error);
+    handleError(res, error, 'Error al generar opciones de hipótesis con IA');
+  }
+};
+
+
 module.exports = {
   generateArtifactWithAI,
   improveArtifactWithAI,
   improveAllArtifactsWithAI,
   getContextStats,
-  getCoherenceReport
+  getCoherenceReport,
+  generateHypothesisFromProblem
 };
