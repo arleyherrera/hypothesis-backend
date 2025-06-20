@@ -1,6 +1,4 @@
-// helpers/controllerUtils.js
-// Utilidades compartidas para todos los controllers
-
+// helpers/controllerUtils.js - CORREGIDO
 const handleError = (res, error, message = 'Error en la operación', statusCode = 500) => {
   console.error(message, error);
   res.status(statusCode).json({ 
@@ -27,7 +25,7 @@ const validateRequiredFields = (data, fields) => {
     };
   }
   
-  const missing = fields.filter(field => !data[field]);
+  const missing = fields.filter(field => !data[field] || data[field].toString().trim() === '');
   return {
     isValid: missing.length === 0,
     missingFields: missing

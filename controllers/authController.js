@@ -1,3 +1,4 @@
+// controllers/authController.js
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { User } = require('../models');
@@ -22,21 +23,53 @@ exports.register = async (req, res) => {
     const { name, email, password } = req.body;
     logOperation('Registro', { email });
     
-    // Corregido: orden correcto de parámetros
-    const validation = validateRequiredFields(req.body, ['name', 'email', 'password']);
-    if (!validation.isValid) {
+    // Verificar si el usuario ya existe
+    const userExists = await User.findOne({ where: { email: email.toLowerCase() } });
+    if (userExists) {
       return res.status(400).json({ 
-        message: 'Campos requeridos faltantes',
-        missingFields: validation.missingFields 
+        message: 'Ya existe una cuenta con este correo electrónico',
+        field: 'email'
       });
     }
     
-    const userExists = await User.findOne({ where: { email } });
-    if (userExists) return res.status(400).json({ message: 'El usuario ya existe' });
+    // Limpiar datos antes de guardar
+    const cleanedData = {
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: password // La contraseña se hashea en el modelo
+    };
     
-    const user = await User.create({ name, email, password });
+    // Crear usuario
+    const user = await User.create(cleanedData);
+    
+    // Log exitoso
+    logOperation('Usuario registrado exitosamente', { 
+      userId: user.id, 
+      email: user.email 
+    });
+    
     res.status(201).json(createUserResponse(user));
   } catch (error) {
+    // Manejar errores específicos de Sequelize
+    if (error.name === 'SequelizeValidationError') {
+      const validationErrors = error.errors.map(err => ({
+        field: err.path,
+        message: err.message
+      }));
+      
+      return res.status(400).json({
+        message: 'Error de validación en los datos',
+        errors: validationErrors
+      });
+    }
+    
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({
+        message: 'El correo electrónico ya está registrado',
+        field: 'email'
+      });
+    }
+    
     handleError(res, error, 'Error al registrar usuario');
   }
 };
@@ -46,20 +79,31 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
     logOperation('Login', { email });
     
-    // Corregido: orden correcto de parámetros
-    const validation = validateRequiredFields(req.body, ['email', 'password']);
-    if (!validation.isValid) {
-      return res.status(400).json({ 
-        message: 'Campos requeridos faltantes',
-        missingFields: validation.missingFields 
+    // Buscar usuario (case insensitive)
+    const user = await User.findOne({ 
+      where: { 
+        email: email.toLowerCase().trim() 
+      } 
+    });
+    
+    if (!user) {
+      return res.status(401).json({ 
+        message: 'Correo electrónico o contraseña incorrectos',
+        field: 'email'
       });
     }
     
-    const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(401).json({ message: 'Credenciales inválidas' });
-    
+    // Verificar contraseña
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: 'Credenciales inválidas' });
+    if (!isMatch) {
+      return res.status(401).json({ 
+        message: 'Correo electrónico o contraseña incorrectos',
+        field: 'password'
+      });
+    }
+    
+    // Log exitoso
+    logOperation('Login exitoso', { userId: user.id, email: user.email });
     
     res.json(createUserResponse(user));
   } catch (error) {
@@ -69,10 +113,22 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
   try {
-    const user = await User.findByPk(req.user.id);
-    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+    const user = await User.findByPk(req.user.id, {
+      attributes: ['id', 'name', 'email', 'createdAt']
+    });
     
-    res.json({ id: user.id, name: user.name, email: user.email });
+    if (!user) {
+      return res.status(404).json({ 
+        message: 'Usuario no encontrado' 
+      });
+    }
+    
+    res.json({ 
+      id: user.id, 
+      name: user.name, 
+      email: user.email,
+      createdAt: user.createdAt
+    });
   } catch (error) {
     handleError(res, error, 'Error al obtener información del usuario');
   }
