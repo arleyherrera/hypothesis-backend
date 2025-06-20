@@ -564,7 +564,7 @@ PROBLEMA IDENTIFICADO:
 
 Tu tarea es transformar este problema en 3 hipótesis TESTABLES siguiendo la metodología Lean Startup.
 
-IMPORTANTE - Cada hipótesis debe seguir esta estructura:
+IMPORTANTE - Cada hipótesis debe seguir EXACTAMENTE esta estructura para el campo 'name':
 "Creemos que [segmento específico] tiene el problema de [problema claro].
 Si les ofrecemos [solución concreta], entonces [métrica/comportamiento medible]."
 
@@ -574,6 +574,13 @@ CRITERIOS PARA CADA HIPÓTESIS:
 3. El segmento debe ser lo suficientemente específico para encontrar 10-20 personas
 4. La solución debe ser un MVP realizable con recursos mínimos
 5. Cada opción debe tener un enfoque DIFERENTE (no solo variaciones)
+6. El campo 'name' NO DEBE EXCEDER 255 CARACTERES - sé conciso
+
+TIPS PARA MANTENER EL NOMBRE CORTO:
+- Usa números en lugar de palabras (4h en vez de "cuatro horas")
+- Abrevia donde sea posible (app, min, h/semana)
+- Omite palabras innecesarias ("de", "en", "para" cuando sea posible)
+- Sé específico pero breve en segmentos (diseñadores 25-35 en vez de "diseñadores gráficos freelance de 25 a 35 años")
 
 ENFOQUES SUGERIDOS:
 - Opción 1: Enfoque tecnológico/digital
@@ -581,7 +588,13 @@ ENFOQUES SUGERIDOS:
 - Opción 3: Enfoque híbrido o de comunidad
 
 Para cada opción, genera:
-1. name: Título descriptivo de la hipótesis en formato "Solución para Segmento" (máx 100 caracteres)
+1. name: La hipótesis COMPLETA siguiendo EXACTAMENTE esta plantilla:
+   "Creemos que [segmento] tiene el problema de [problema]. Si les ofrecemos [solución], entonces [resultado]"
+   IMPORTANTE: 
+   - Este campo 'name' debe contener la hipótesis completa en formato Lean Canvas
+   - MÁXIMO 255 CARACTERES TOTAL
+   - Sé conciso pero específico
+   - Usa números y abreviaciones donde sea apropiado
 2. solution: MVP específico que se puede construir en 2-4 semanas. Incluye:
    - Qué es exactamente (app, servicio, proceso, etc.)
    - Características mínimas (máximo 3)
@@ -595,32 +608,38 @@ Para cada opción, genera:
    - Por qué es 10x mejor que la alternativa actual
    - Qué métrica validaría el éxito
 
-EJEMPLO DE FORMATO ESPERADO:
-Si el problema fuera "Los freelancers pierden tiempo haciendo facturas manualmente", una hipótesis sería:
+EJEMPLO DE FORMATO ESPERADO (name con máximo 255 caracteres):
+Si el problema fuera "Los freelancers pierden tiempo haciendo facturas manualmente":
 
-"Creemos que freelancers diseñadores de 25-35 años en ciudades grandes tienen el problema de perder 4+ horas semanales creando facturas manualmente.
-Si les ofrecemos una app móvil que genera facturas con un click desde WhatsApp, entonces reducirán ese tiempo a 10 minutos y pagarán $5/mes."
+name: "Creemos que diseñadores freelance 25-35 años tienen el problema de perder 4h/semana en facturas. Si les ofrecemos app móvil de facturas en 1 click, entonces reducirán a 10min y pagarán $5/mes"
+(Ejemplo: 198 caracteres)
+
+solution: "App móvil minimalista que genera facturas profesionales. Características: 1) Plantillas prediseñadas, 2) Cálculo automático de impuestos, 3) Envío directo por WhatsApp. Implementación: PWA con React en 3 semanas"
+
+customerSegment: "Diseñadores gráficos freelance, 25-35 años, en ciudades grandes (CDMX, Guadalajara), que facturan 5-15 clientes/mes. Actualmente usan Excel. Encontrarlos en grupos de Facebook de diseñadores y coworkings creativos"
+
+valueProposition: "Ahorra 15+ horas al mes (de 4 horas/semana a 10 min), permitiendo tomar 2 proyectos extra = $1000 USD más/mes. Es 10x mejor que Excel porque es móvil y automatizado. Métrica de éxito: 80% de usuarios activos después de 30 días"
 
 Responde ÚNICAMENTE con un JSON válido en este formato:
 {
   "options": [
     {
-      "name": "nombre de la hipótesis 1",
-      "solution": "descripción detallada del MVP 1 con implementación específica",
-      "customerSegment": "segmento ultra-específico 1 con forma de encontrarlos",
-      "valueProposition": "propuesta medible 1 con métrica de validación"
+      "name": "Creemos que [segmento] tiene el problema de [problema]. Si les ofrecemos [solución], entonces [resultado]",
+      "solution": "descripción detallada del MVP con implementación específica",
+      "customerSegment": "segmento ultra-específico con forma de encontrarlos",
+      "valueProposition": "propuesta medible con métrica de validación"
     },
     {
-      "name": "nombre de la hipótesis 2",
-      "solution": "descripción detallada del MVP 2 con implementación específica",
-      "customerSegment": "segmento ultra-específico 2 con forma de encontrarlos",
-      "valueProposition": "propuesta medible 2 con métrica de validación"
+      "name": "Creemos que [segmento] tiene el problema de [problema]. Si les ofrecemos [solución], entonces [resultado]",
+      "solution": "descripción detallada del MVP con implementación específica",
+      "customerSegment": "segmento ultra-específico con forma de encontrarlos",
+      "valueProposition": "propuesta medible con métrica de validación"
     },
     {
-      "name": "nombre de la hipótesis 3",
-      "solution": "descripción detallada del MVP 3 con implementación específica",
-      "customerSegment": "segmento ultra-específico 3 con forma de encontrarlos",
-      "valueProposition": "propuesta medible 3 con métrica de validación"
+      "name": "Creemos que [segmento] tiene el problema de [problema]. Si les ofrecemos [solución], entonces [resultado]",
+      "solution": "descripción detallada del MVP con implementación específica",
+      "customerSegment": "segmento ultra-específico con forma de encontrarlos",
+      "valueProposition": "propuesta medible con métrica de validación"
     }
   ]
 }`;
