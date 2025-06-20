@@ -557,46 +557,70 @@ const generateHypothesisFromProblem = async (req, res) => {
     }
     
     const prompt = `
-Actúa como un experto en Lean Startup y emprendimiento.
+Actúa como un experto en Lean Startup y emprendimiento con 10 años de experiencia validando hipótesis de negocio.
 
 PROBLEMA IDENTIFICADO:
 "${problem}"
 
-Basándote ÚNICAMENTE en este problema específico, genera 3 opciones diferentes de hipótesis completas. 
-Cada opción debe abordar el mismo problema pero con enfoques distintos.
+Tu tarea es transformar este problema en 3 hipótesis TESTABLES siguiendo la metodología Lean Startup.
+
+IMPORTANTE - Cada hipótesis debe seguir esta estructura:
+"Creemos que [segmento específico] tiene el problema de [problema claro].
+Si les ofrecemos [solución concreta], entonces [métrica/comportamiento medible]."
+
+CRITERIOS PARA CADA HIPÓTESIS:
+1. Debe ser TESTABLE en 2-4 semanas
+2. Debe tener métricas claras de éxito
+3. El segmento debe ser lo suficientemente específico para encontrar 10-20 personas
+4. La solución debe ser un MVP realizable con recursos mínimos
+5. Cada opción debe tener un enfoque DIFERENTE (no solo variaciones)
+
+ENFOQUES SUGERIDOS:
+- Opción 1: Enfoque tecnológico/digital
+- Opción 2: Enfoque de servicio/humano
+- Opción 3: Enfoque híbrido o de comunidad
 
 Para cada opción, genera:
-1. name: Un nombre descriptivo para la hipótesis (máximo 100 caracteres)
-2. solution: Una solución específica y detallada que resuelva directamente el problema
-3. customerSegment: El segmento de clientes específico que experimenta este problema
-4. valueProposition: La propuesta de valor única que diferencia esta solución
+1. name: Título descriptivo de la hipótesis en formato "Solución para Segmento" (máx 100 caracteres)
+2. solution: MVP específico que se puede construir en 2-4 semanas. Incluye:
+   - Qué es exactamente (app, servicio, proceso, etc.)
+   - Características mínimas (máximo 3)
+   - Cómo se implementaría
+3. customerSegment: Perfil ultra-específico. Incluye:
+   - Demografía (edad, ubicación, ocupación)
+   - Comportamiento actual relacionado al problema
+   - Dónde encontrarlos para validar
+4. valueProposition: Propuesta única que incluya:
+   - Beneficio principal medible (ahorro tiempo/dinero, mejora en X%)
+   - Por qué es 10x mejor que la alternativa actual
+   - Qué métrica validaría el éxito
 
-IMPORTANTE:
-- Cada opción debe ser significativamente diferente en su enfoque
-- Las soluciones deben ser realizables y específicas
-- Los segmentos de clientes deben ser bien definidos
-- Todo debe estar directamente relacionado con el problema proporcionado
+EJEMPLO DE FORMATO ESPERADO:
+Si el problema fuera "Los freelancers pierden tiempo haciendo facturas manualmente", una hipótesis sería:
+
+"Creemos que freelancers diseñadores de 25-35 años en ciudades grandes tienen el problema de perder 4+ horas semanales creando facturas manualmente.
+Si les ofrecemos una app móvil que genera facturas con un click desde WhatsApp, entonces reducirán ese tiempo a 10 minutos y pagarán $5/mes."
 
 Responde ÚNICAMENTE con un JSON válido en este formato:
 {
   "options": [
     {
       "name": "nombre de la hipótesis 1",
-      "solution": "descripción detallada de la solución 1",
-      "customerSegment": "segmento específico 1",
-      "valueProposition": "propuesta de valor única 1"
+      "solution": "descripción detallada del MVP 1 con implementación específica",
+      "customerSegment": "segmento ultra-específico 1 con forma de encontrarlos",
+      "valueProposition": "propuesta medible 1 con métrica de validación"
     },
     {
       "name": "nombre de la hipótesis 2",
-      "solution": "descripción detallada de la solución 2",
-      "customerSegment": "segmento específico 2",
-      "valueProposition": "propuesta de valor única 2"
+      "solution": "descripción detallada del MVP 2 con implementación específica",
+      "customerSegment": "segmento ultra-específico 2 con forma de encontrarlos",
+      "valueProposition": "propuesta medible 2 con métrica de validación"
     },
     {
       "name": "nombre de la hipótesis 3",
-      "solution": "descripción detallada de la solución 3",
-      "customerSegment": "segmento específico 3",
-      "valueProposition": "propuesta de valor única 3"
+      "solution": "descripción detallada del MVP 3 con implementación específica",
+      "customerSegment": "segmento ultra-específico 3 con forma de encontrarlos",
+      "valueProposition": "propuesta medible 3 con métrica de validación"
     }
   ]
 }`;
