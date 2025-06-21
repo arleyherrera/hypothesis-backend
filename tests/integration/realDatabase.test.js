@@ -17,26 +17,22 @@ describe('Real Database Integration Tests', () => {
     await setupTestDatabase();
   });
 
-  beforeEach(async () => {
-    // Limpiar datos de test anteriores
-    await cleanTestData();
-    
-    // Crear usuario real en la BD
-    const hashedPassword = await bcrypt.hash('testpassword123', 10);
-    testUser = await User.create({
-      name: 'Test User Real',
-      email: 'test.real@example.com',
-      password: hashedPassword
-    });
+  // tests/integration/realDatabase.test.js
 
-    authToken = createTestToken(testUser.id, testUser.email);
+beforeEach(async () => {
+  // Limpiar datos de test anteriores
+  await cleanTestData();
+  
+  // Crear usuario real en la BD
+  // NO hashear la contraseña antes, dejar que el modelo lo haga
+  testUser = await User.create({
+    name: 'Test User Real',
+    email: 'test.real@example.com',
+    password: 'TestPassword123!' // Contraseña sin hashear que cumple validaciones
   });
 
-  afterEach(async () => {
-    // Limpiar datos después de cada test
-    await cleanTestData();
-  });
-
+  authToken = createTestToken(testUser.id, testUser.email);
+});
   describe('GET /api/hypotheses - Tests con BD Real', () => {
     it('debería obtener hipótesis reales del usuario', async () => {
       // Crear hipótesis real en la BD

@@ -34,36 +34,64 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: {
-        msg: 'Este correo electrónico ya está registrado'
-      },
-      validate: {
-        notNull: {
-          msg: 'El correo electrónico es requerido'
-        },
-        notEmpty: {
-          msg: 'El correo electrónico no puede estar vacío'
-        },
-        isEmail: {
-          msg: 'Debe ser un correo electrónico válido'
-        },
-        len: {
-          args: [1, 100],
-          msg: 'El correo no puede exceder 100 caracteres'
-        },
-        customValidator(value) {
-          // Verificar caracteres peligrosos
-          const dangerousChars = /[()<>&\[\]\\,;:\s"]/;
-          const localPart = value.split('@')[0];
-          if (dangerousChars.test(localPart)) {
-            throw new Error('El correo contiene caracteres no permitidos');
-          }
-        }
-      }
+   email: {
+  type: DataTypes.STRING,
+  allowNull: false,
+  unique: {
+    msg: 'Este correo electrónico ya está registrado'
+  },
+  validate: {
+    notNull: {
+      msg: 'El correo electrónico es requerido'
     },
+    notEmpty: {
+      msg: 'El correo electrónico no puede estar vacío'
+    },
+    isEmail: {
+      msg: 'Debe ser un correo electrónico válido'
+    },
+    len: {
+      args: [1, 100],
+      msg: 'El correo no puede exceder 100 caracteres'
+    },
+    customValidator(value) {
+      // Verificar caracteres peligrosos o no permitidos
+      const dangerousChars = /[()<>&\[\]\\,;:\s"'`!#$%^*+={}|~?]/;
+      const localPart = value.split('@')[0];
+      const domainPart = value.split('@')[1];
+      
+      // Validar parte local (antes del @)
+      if (dangerousChars.test(localPart)) {
+        throw new Error('El correo contiene caracteres no permitidos. Solo se permiten letras, números, puntos (.), guiones (-) y guiones bajos (_)');
+      }
+      
+      // Verificar que no empiece o termine con punto
+      if (localPart.startsWith('.') || localPart.endsWith('.')) {
+        throw new Error('El correo no puede empezar o terminar con un punto');
+      }
+      
+      // Verificar puntos consecutivos
+      if (localPart.includes('..')) {
+        throw new Error('El correo no puede contener puntos consecutivos');
+      }
+      
+      // Validar formato más estricto
+      const strictEmailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!strictEmailRegex.test(value)) {
+        throw new Error('Formato de correo inválido. Use solo letras, números, puntos, guiones y guiones bajos');
+      }
+      
+      // Validar longitud de partes
+      if (localPart.length > 64) {
+        throw new Error('La parte local del correo (antes del @) no puede exceder 64 caracteres');
+      }
+      
+      if (domainPart && domainPart.length > 255) {
+        throw new Error('El dominio del correo es demasiado largo');
+      }
+    }
+  }
+},
     password: {
       type: DataTypes.STRING,
       allowNull: false,

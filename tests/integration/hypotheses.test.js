@@ -20,8 +20,38 @@ jest.mock('../../models', () => ({
     destroy: jest.fn()
   },
   Artifact: {
-    name: 'Artifact'
+    name: 'Artifact',
+    findAll: jest.fn(),
+    destroy: jest.fn()
   }
+}));
+
+// Mock de helpers
+jest.mock('../../helpers/controllerUtils', () => ({
+  handleError: jest.fn(),
+  validateRequiredFields: jest.fn((data, fields) => {
+    // Validación simple para el mock
+    const missingFields = [];
+    if (!Array.isArray(fields)) {
+      return { isValid: false, missingFields: ['Invalid fields array'] };
+    }
+    
+    fields.forEach(field => {
+      if (!data || !data[field] || data[field].toString().trim() === '') {
+        missingFields.push(field);
+      }
+    });
+    
+    return {
+      isValid: missingFields.length === 0,
+      missingFields: missingFields
+    };
+  }),
+  validatePhase: jest.fn(phase => {
+    const validPhases = ['construir', 'medir', 'aprender', 'pivotar', 'iterar'];
+    return validPhases.includes(phase);
+  }),
+  logOperation: jest.fn()
 }));
 
 describe('Hypothesis Routes Integration', () => {
@@ -47,7 +77,7 @@ describe('Hypothesis Routes Integration', () => {
       const mockHypotheses = [{
         id: 1,
         name: 'Test Hypothesis',
-        problem: 'Test problem',
+        problem: 'Test problem that needs to be solved',
         solution: 'Test solution',
         customerSegment: 'Test segment',
         valueProposition: 'Test value prop',
@@ -76,10 +106,10 @@ describe('Hypothesis Routes Integration', () => {
   describe('POST /api/hypotheses', () => {
     const validHypothesis = {
       name: 'Nueva Hipótesis',
-      problem: 'Problema de prueba',
-      solution: 'Solución de prueba',
-      customerSegment: 'Segmento de prueba',
-      valueProposition: 'Propuesta de valor de prueba'
+      problem: 'Este es un problema complejo que necesita una solución innovadora urgente', // Más de 20 caracteres
+      solution: 'Solución de prueba detallada',
+      customerSegment: 'Segmento de prueba específico',
+      valueProposition: 'Propuesta de valor de prueba única'
     };
 
     it('debería crear una nueva hipótesis', async () => {
@@ -99,6 +129,7 @@ describe('Hypothesis Routes Integration', () => {
 
       expect(response.status).toBe(201);
       expect(response.body.name).toBe(validHypothesis.name);
+      expect(response.body.userId).toBe(testUserId);
     });
 
     it('debería retornar 401 sin autenticación', async () => {
@@ -108,5 +139,43 @@ describe('Hypothesis Routes Integration', () => {
 
       expect(response.status).toBe(401);
     });
+
+    it('debería validar campos requeridos', async () => {
+      const invalidData = {
+        name: 'Solo nombre'
+        // Faltan campos requeridos
+      };
+
+      const response = await request(app)
+        .post('/api/hypotheses')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(invalidData);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toContain('Campos requeridos faltantes');
+    });
+
+    it('debería validar longitud mínima del problema', async () => {
+      const invalidData = {
+        ...validHypothesis,
+        problem: 'Problema corto' // Menos de 20 caracteres
+      };
+
+      const response = await request(app)
+        .post('/api/hypotheses')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(invalidData);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toContain('El problema debe tener al menos 20 caracteres');
+    });
   });
+});
+
+// Limpiar después de todos los tests
+afterAll(async () => {
+  // Cerrar cualquier conexión pendiente
+  await new Promise(resolve => setTimeout(resolve, 500));
 });
