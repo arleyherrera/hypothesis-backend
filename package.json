@@ -16,7 +16,11 @@
     "seed:undo": "sequelize-cli db:seed:undo:all",
     "build": "echo 'No build step required'",
     "postinstall": "echo 'Dependencies installed successfully'",
-    "docs:generate": "node scripts/generateDocs.js"
+    "docs:generate": "node scripts/generateDocs.js",
+    "test:detailed": "jest --verbose --runInBand tests/controllers/*.detailed.test.js",
+    "test:report": "node tests/runTestsWithReport.js",
+    "test:auth": "jest tests/controllers/authController.detailed.test.js --verbose",
+    "test:hypothesis": "jest tests/controllers/hypothesisController.detailed.test.js --verbose"
   },
   "engines": {
     "node": ">=14.0.0",
