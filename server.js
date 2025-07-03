@@ -8,6 +8,8 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const { sequelize } = require('./models');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 
 // Cargar variables de entorno ANTES de todo
 dotenv.config();
@@ -15,8 +17,31 @@ dotenv.config();
 const app = express();
 
 // ===== SEGURIDAD =====
-// Helmet para headers de seguridad
 app.use(helmet());
+
+// Swagger UI - debe ir antes de las rutas autenticadas
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "Lean Startup API Docs",
+  swaggerOptions: {
+    persistAuthorization: true,
+    displayRequestDuration: true,
+    docExpansion: 'none',
+    filter: true,
+    showExtensions: true,
+    showCommonExtensions: true,
+    displayOperationId: false,
+    defaultModelsExpandDepth: 2,
+    defaultModelExpandDepth: 2,
+    tryItOutEnabled: true
+  }
+}));
+
+// Endpoint para obtener el spec en JSON
+app.get('/api-docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 // Rate limiting global
 const limiter = rateLimit({

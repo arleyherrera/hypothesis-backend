@@ -204,8 +204,7 @@ beforeEach(async () => {
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Hipótesis eliminada');
-
+      expect(response.body.message).toBe('Hipótesis eliminada correctamente');
       // Verificar eliminación en BD
       const deletedHypothesis = await Hypothesis.findByPk(realHypothesis.id);
       expect(deletedHypothesis).toBeNull();

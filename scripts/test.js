@@ -12,25 +12,25 @@ process.env.NODE_ENV = 'test';
 
 const commands = {
   // Ejecutar todos los tests
-  all: 'jest',
+  all: 'npx jest',
   
   // Ejecutar tests con watch mode
-  watch: 'jest --watch',
+  watch: 'npx jest --watch',
   
   // Ejecutar tests con coverage
-  coverage: 'jest --coverage',
+  coverage: 'npx jest --coverage',
   
   // Ejecutar solo tests unitarios
-  unit: 'jest tests/controllers tests/middleware tests/helpers',
+  unit: 'npx jest tests/controllers tests/middleware tests/helpers',
   
   // Ejecutar solo tests de integración
-  integration: 'jest tests/integration',
+  integration: 'npx jest tests/integration',
   
   // Ejecutar tests específicos
-  specific: (pattern) => `jest ${pattern}`,
+  specific: (pattern) => `npx jest ${pattern}`,
   
   // Limpiar cache de Jest
-  clear: 'jest --clearCache'
+  clear: 'npx jest --clearCache'
 };
 
 // Obtener el comando de los argumentos
