@@ -1,0 +1,328 @@
+{
+  "executionId": 1751668795369,
+  "startTime": "2025-07-04T22:39:55.369Z",
+  "scenarios": [
+    {
+      "scenarioId": "SCN-004",
+      "scenarioName": "Artifact Generation Lifecycle",
+      "startTime": "2025-07-04T22:39:55.370Z",
+      "totalFunctions": 1,
+      "totalCases": 3,
+      "passed": 3,
+      "failed": 0,
+      "functions": [
+        {
+          "functionId": "FN-ART-001",
+          "functionName": "generateArtifacts",
+          "module": "artifacts",
+          "totalCases": 3,
+          "passed": 3,
+          "failed": 0,
+          "cases": [
+            {
+              "testCase": {
+                "id": "TC-ART-POS-001",
+                "name": "Generar artefactos para fase Construir",
+                "description": "Genera los 6 artefactos de la fase construir para una hipótesis válida",
+                "type": "positive",
+                "priority": "high",
+                "input": {
+                  "hypothesisId": 1,
+                  "phase": "construir"
+                },
+                "expectedOutput": {
+                  "status": 201,
+                  "body": {
+                    "message": "6 artefactos generados para construir",
+                    "artifacts": [
+                      {
+                        "name": "MVP Personalizado",
+                        "phase": "construir",
+                        "description": "Plan detallado para construir tu producto mínimo viable."
+                      },
+                      {
+                        "name": "Mapa de Empatía Personalizado",
+                        "phase": "construir",
+                        "description": "Análisis profundo de tu segmento de clientes."
+                      },
+                      {
+                        "name": "Backlog de Funcionalidades",
+                        "phase": "construir",
+                        "description": "Priorización de características críticas para tu MVP."
+                      },
+                      {
+                        "name": "Experimentos de Validación",
+                        "phase": "construir",
+                        "description": "Diseño de experimentos para validar tus supuestos clave."
+                      },
+                      {
+                        "name": "Plan de Recursos",
+                        "phase": "construir",
+                        "description": "Estrategia para optimizar los recursos necesarios."
+                      },
+                      {
+                        "name": "Estrategia de Early Adopters",
+                        "phase": "construir",
+                        "description": "Plan para conseguir tus primeros usuarios."
+                      }
+                    ]
+                  }
+                },
+                "endpoint": "/api/artifacts/:hypothesisId/generate/construir",
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 201,
+                    "body": {
+                      "message": "6 artefactos generados para construir",
+                      "artifacts": [
+                        {
+                          "id": 1,
+                          "name": "MVP Personalizado",
+                          "phase": "construir"
+                        },
+                        {
+                          "id": 2,
+                          "name": "Mapa de Empatía Personalizado",
+                          "phase": "construir"
+                        },
+                        {
+                          "id": 3,
+                          "name": "Backlog de Funcionalidades",
+                          "phase": "construir"
+                        },
+                        {
+                          "id": 4,
+                          "name": "Experimentos de Validación",
+                          "phase": "construir"
+                        },
+                        {
+                          "id": 5,
+                          "name": "Plan de Recursos",
+                          "phase": "construir"
+                        },
+                        {
+                          "id": 6,
+                          "name": "Estrategia de Early Adopters",
+                          "phase": "construir"
+                        }
+                      ]
+                    }
+                  },
+                  "executionTime": 77,
+                  "timestamp": "2025-07-04T22:39:55.372Z"
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 201,
+                  "body": {
+                    "message": "6 artefactos generados para construir",
+                    "artifacts": [
+                      {
+                        "id": 1,
+                        "name": "MVP Personalizado",
+                        "phase": "construir"
+                      },
+                      {
+                        "id": 2,
+                        "name": "Mapa de Empatía Personalizado",
+                        "phase": "construir"
+                      },
+                      {
+                        "id": 3,
+                        "name": "Backlog de Funcionalidades",
+                        "phase": "construir"
+                      },
+                      {
+                        "id": 4,
+                        "name": "Experimentos de Validación",
+                        "phase": "construir"
+                      },
+                      {
+                        "id": 5,
+                        "name": "Plan de Recursos",
+                        "phase": "construir"
+                      },
+                      {
+                        "id": 6,
+                        "name": "Estrategia de Early Adopters",
+                        "phase": "construir"
+                      }
+                    ]
+                  }
+                },
+                "executionTime": 77,
+                "timestamp": "2025-07-04T22:39:55.372Z"
+              }
+            },
+            {
+              "testCase": {
+                "id": "TC-ART-POS-002",
+                "name": "Generar artefactos para fase Medir",
+                "description": "Genera los 6 artefactos de la fase medir",
+                "type": "positive",
+                "priority": "high",
+                "input": {
+                  "hypothesisId": 1,
+                  "phase": "medir"
+                },
+                "expectedOutput": {
+                  "status": 201,
+                  "body": {
+                    "message": "6 artefactos generados para medir",
+                    "artifacts": "array"
+                  }
+                },
+                "endpoint": "/api/artifacts/:hypothesisId/generate/medir",
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 201,
+                    "body": {
+                      "message": "6 artefactos generados para medir",
+                      "artifacts": [
+                        {
+                          "id": 7,
+                          "name": "Framework de KPIs Personalizado",
+                          "phase": "medir"
+                        },
+                        {
+                          "id": 8,
+                          "name": "Plan de Analítica",
+                          "phase": "medir"
+                        },
+                        {
+                          "id": 9,
+                          "name": "Diseño de Tests A/B",
+                          "phase": "medir"
+                        },
+                        {
+                          "id": 10,
+                          "name": "Embudo de Conversión",
+                          "phase": "medir"
+                        },
+                        {
+                          "id": 11,
+                          "name": "Sistema de Retroalimentación",
+                          "phase": "medir"
+                        },
+                        {
+                          "id": 12,
+                          "name": "Dashboard de Métricas",
+                          "phase": "medir"
+                        }
+                      ]
+                    }
+                  },
+                  "executionTime": 57,
+                  "timestamp": "2025-07-04T22:39:55.375Z"
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 201,
+                  "body": {
+                    "message": "6 artefactos generados para medir",
+                    "artifacts": [
+                      {
+                        "id": 7,
+                        "name": "Framework de KPIs Personalizado",
+                        "phase": "medir"
+                      },
+                      {
+                        "id": 8,
+                        "name": "Plan de Analítica",
+                        "phase": "medir"
+                      },
+                      {
+                        "id": 9,
+                        "name": "Diseño de Tests A/B",
+                        "phase": "medir"
+                      },
+                      {
+                        "id": 10,
+                        "name": "Embudo de Conversión",
+                        "phase": "medir"
+                      },
+                      {
+                        "id": 11,
+                        "name": "Sistema de Retroalimentación",
+                        "phase": "medir"
+                      },
+                      {
+                        "id": 12,
+                        "name": "Dashboard de Métricas",
+                        "phase": "medir"
+                      }
+                    ]
+                  }
+                },
+                "executionTime": 57,
+                "timestamp": "2025-07-04T22:39:55.375Z"
+              }
+            },
+            {
+              "testCase": {
+                "id": "TC-ART-NEG-001",
+                "name": "Generar artefactos con fase inválida",
+                "description": "Intenta generar artefactos con una fase que no existe",
+                "type": "negative",
+                "priority": "high",
+                "input": {
+                  "hypothesisId": 1,
+                  "phase": "fase-invalida"
+                },
+                "expectedOutput": {
+                  "status": 400,
+                  "body": {
+                    "message": "Fase no válida"
+                  }
+                },
+                "endpoint": "/api/artifacts/:hypothesisId/generate/fase-invalida",
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 400,
+                    "body": {
+                      "message": "Fase no válida"
+                    }
+                  },
+                  "executionTime": 102,
+                  "timestamp": "2025-07-04T22:39:55.377Z"
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 400,
+                  "body": {
+                    "message": "Fase no válida"
+                  }
+                },
+                "executionTime": 102,
+                "timestamp": "2025-07-04T22:39:55.377Z"
+              }
+            }
+          ],
+          "executionTime": 6,
+          "successRate": "100.00%"
+        }
+      ],
+      "executionTime": 9,
+      "endTime": "2025-07-04T22:39:55.379Z",
+      "successRate": "100.00%"
+    }
+  ],
+  "summary": {
+    "totalScenarios": 1,
+    "totalFunctions": 1,
+    "totalCases": 3,
+    "passed": 3,
+    "failed": 0,
+    "successRate": "100.00%"
+  },
+  "endTime": "2025-07-04T22:39:55.379Z"
+}

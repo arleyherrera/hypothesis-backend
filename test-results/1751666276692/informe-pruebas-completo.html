@@ -1,0 +1,578 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Informe de Pruebas - Lean Startup Assistant</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 21cm;
+            margin: 0 auto;
+        }
+        .portada {
+            text-align: center;
+            page-break-after: always;
+            padding-top: 10cm;
+        }
+        .portada h1 {
+            font-size: 36pt;
+            margin-bottom: 2cm;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            page-break-before: always;
+        }
+        h1:first-child {
+            page-break-before: avoid;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #7f8c8d;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .passed {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .failed {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .metric-box {
+            background: #ecf0f1;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .metric-value {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .toc {
+            page-break-after: always;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin: 10px 0;
+            padding: 5px;
+            border-bottom: 1px dotted #ccc;
+        }
+        .test-case {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+        }
+        .test-case.positive {
+            border-left-color: #27ae60;
+        }
+        .test-case.negative {
+            border-left-color: #e74c3c;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <!-- PORTADA -->
+    <div class="portada">
+        <h1>INFORME DE PRUEBAS DE SOFTWARE</h1>
+        <h2>Lean Startup Assistant</h2>
+        <p style="font-size: 18pt; margin-top: 3cm;">
+            Fecha: 4/7/2025, 17:01:31<br>
+            Versión: 1.0.0
+        </p>
+    </div>
+    
+    <!-- TABLA DE CONTENIDOS -->
+    <div class="toc">
+        <h1>Tabla de Contenidos</h1>
+        <ul>
+            <li>1. Resumen Ejecutivo</li>
+            <li>2. Escenarios de Prueba</li>
+            <li>3. Funciones Probadas</li>
+            <li>4. Casos de Prueba Detallados</li>
+            <li>5. Resultados de Ejecución</li>
+            <li>6. Conclusiones y Recomendaciones</li>
+        </ul>
+    </div>
+    
+    <!-- 1. RESUMEN EJECUTIVO -->
+    <h1>1. Resumen Ejecutivo</h1>
+    
+    <h2>1.1 Objetivo</h2>
+    <p>Este documento presenta los resultados de las pruebas realizadas al sistema Lean Startup Assistant, 
+    una aplicación diseñada para ayudar a emprendedores a validar sus hipótesis de negocio siguiendo 
+    la metodología Lean Startup.</p>
+    
+    <h2>1.2 Alcance</h2>
+    <p>Las pruebas cubren los siguientes módulos principales:</p>
+    <ul>
+        <li>Autenticación de usuarios (registro y login)</li>
+        <li>Gestión de hipótesis</li>
+        <li>Generación de artefactos con IA</li>
+    </ul>
+    
+    <h2>1.3 Métricas Generales</h2>
+    <div>
+        <div class="metric-box">
+            <div class="metric-value">3</div>
+            <div>Escenarios</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-value">6</div>
+            <div>Casos de Prueba</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-value passed">6</div>
+            <div>Exitosos</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-value failed">0</div>
+            <div>Fallidos</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-value">100.00%</div>
+            <div>Tasa de Éxito</div>
+        </div>
+    </div>
+    
+    <!-- 2. ESCENARIOS DE PRUEBA -->
+    <h1>2. Escenarios de Prueba</h1>
+    
+    
+      <h2>2.1 Complete User Journey</h2>
+      <table>
+        <tr>
+            <th>Propiedad</th>
+            <th>Valor</th>
+        </tr>
+        <tr>
+            <td>Funciones Ejecutadas</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <td>Casos de Prueba</td>
+            <td>6</td>
+        </tr>
+        <tr>
+            <td>Exitosos</td>
+            <td class="passed">6</td>
+        </tr>
+        <tr>
+            <td>Fallidos</td>
+            <td class="failed">0</td>
+        </tr>
+        <tr>
+            <td>Tasa de Éxito</td>
+            <td>100.00%</td>
+        </tr>
+      </table>
+      <h2>2.2 Hypothesis Lifecycle</h2>
+      <table>
+        <tr>
+            <th>Propiedad</th>
+            <th>Valor</th>
+        </tr>
+        <tr>
+            <td>Funciones Ejecutadas</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>Casos de Prueba</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>Exitosos</td>
+            <td class="passed">0</td>
+        </tr>
+        <tr>
+            <td>Fallidos</td>
+            <td class="failed">0</td>
+        </tr>
+        <tr>
+            <td>Tasa de Éxito</td>
+            <td>NaN%</td>
+        </tr>
+      </table>
+      <h2>2.3 AI Generation</h2>
+      <table>
+        <tr>
+            <th>Propiedad</th>
+            <th>Valor</th>
+        </tr>
+        <tr>
+            <td>Funciones Ejecutadas</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>Casos de Prueba</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>Exitosos</td>
+            <td class="passed">0</td>
+        </tr>
+        <tr>
+            <td>Fallidos</td>
+            <td class="failed">0</td>
+        </tr>
+        <tr>
+            <td>Tasa de Éxito</td>
+            <td>NaN%</td>
+        </tr>
+      </table>
+    
+    <!-- 3. FUNCIONES PROBADAS -->
+    <h1>3. Funciones Probadas</h1>
+    
+    
+          <h2>3.1 Función: register</h2>
+          <p><strong>Módulo:</strong> auth</p>
+          <p><strong>Casos de prueba:</strong> 2</p>
+          <p><strong>Tasa de éxito:</strong> 100.00%</p>
+          <h2>3.2 Función: login</h2>
+          <p><strong>Módulo:</strong> auth</p>
+          <p><strong>Casos de prueba:</strong> 2</p>
+          <p><strong>Tasa de éxito:</strong> 100.00%</p>
+          <h2>3.3 Función: createHypothesis</h2>
+          <p><strong>Módulo:</strong> hypothesis</p>
+          <p><strong>Casos de prueba:</strong> 2</p>
+          <p><strong>Tasa de éxito:</strong> 100.00%</p>
+    
+    <!-- 4. CASOS DE PRUEBA DETALLADOS -->
+    <h1>4. Casos de Prueba Detallados</h1>
+    
+    
+            <div class="test-case positive">
+                <h3>4.1 Registro exitoso</h3>
+                <p><strong>ID:</strong> TC-REG-001</p>
+                <p><strong>Tipo:</strong> positive</p>
+                <p><strong>Prioridad:</strong> high</p>
+                <p><strong>Estado:</strong> <span class="passed">PASÓ</span></p>
+                
+                <h4>Entrada:</h4>
+                <pre>{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "TestPass123!"
+}</pre>
+                
+                <h4>Salida Esperada:</h4>
+                <pre>{
+  "status": 201,
+  "body": {
+    "id": "number",
+    "name": "Test User",
+    "email": "test@example.com",
+    "token": "string"
+  }
+}</pre>
+                
+                <h4>Salida Real:</h4>
+                <pre>{
+  "status": 201,
+  "body": {
+    "id": 509,
+    "name": "Test User",
+    "email": "test@example.com",
+    "token": "mock-jwt-token-12345"
+  }
+}</pre>
+                
+                <p><strong>Tiempo de ejecución:</strong> 68ms</p>
+            </div>
+            <div class="test-case negative">
+                <h3>4.2 Registro con email duplicado</h3>
+                <p><strong>ID:</strong> TC-REG-002</p>
+                <p><strong>Tipo:</strong> negative</p>
+                <p><strong>Prioridad:</strong> high</p>
+                <p><strong>Estado:</strong> <span class="passed">PASÓ</span></p>
+                
+                <h4>Entrada:</h4>
+                <pre>{
+  "name": "Another User",
+  "email": "test@example.com",
+  "password": "TestPass123!"
+}</pre>
+                
+                <h4>Salida Esperada:</h4>
+                <pre>{
+  "status": 400,
+  "body": {
+    "message": "Email ya registrado"
+  }
+}</pre>
+                
+                <h4>Salida Real:</h4>
+                <pre>{
+  "status": 400,
+  "body": {
+    "message": "Email ya registrado"
+  }
+}</pre>
+                
+                <p><strong>Tiempo de ejecución:</strong> 65ms</p>
+            </div>
+            <div class="test-case positive">
+                <h3>4.3 Login exitoso</h3>
+                <p><strong>ID:</strong> TC-LOGIN-001</p>
+                <p><strong>Tipo:</strong> positive</p>
+                <p><strong>Prioridad:</strong> high</p>
+                <p><strong>Estado:</strong> <span class="passed">PASÓ</span></p>
+                
+                <h4>Entrada:</h4>
+                <pre>{
+  "email": "test@example.com",
+  "password": "TestPass123!"
+}</pre>
+                
+                <h4>Salida Esperada:</h4>
+                <pre>{
+  "status": 200,
+  "body": {
+    "token": "string",
+    "email": "test@example.com"
+  }
+}</pre>
+                
+                <h4>Salida Real:</h4>
+                <pre>{
+  "status": 200,
+  "body": {
+    "token": "mock-jwt-token-12345",
+    "email": "test@example.com"
+  }
+}</pre>
+                
+                <p><strong>Tiempo de ejecución:</strong> 79ms</p>
+            </div>
+            <div class="test-case negative">
+                <h3>4.4 Login con credenciales inválidas</h3>
+                <p><strong>ID:</strong> TC-LOGIN-002</p>
+                <p><strong>Tipo:</strong> negative</p>
+                <p><strong>Prioridad:</strong> high</p>
+                <p><strong>Estado:</strong> <span class="passed">PASÓ</span></p>
+                
+                <h4>Entrada:</h4>
+                <pre>{
+  "email": "test@example.com",
+  "password": "WrongPassword!"
+}</pre>
+                
+                <h4>Salida Esperada:</h4>
+                <pre>{
+  "status": 401,
+  "body": {
+    "message": "Credenciales inválidas"
+  }
+}</pre>
+                
+                <h4>Salida Real:</h4>
+                <pre>{
+  "status": 401,
+  "body": {
+    "message": "Credenciales inválidas"
+  }
+}</pre>
+                
+                <p><strong>Tiempo de ejecución:</strong> 53ms</p>
+            </div>
+            <div class="test-case positive">
+                <h3>4.5 Crear hipótesis válida</h3>
+                <p><strong>ID:</strong> TC-HYP-001</p>
+                <p><strong>Tipo:</strong> positive</p>
+                <p><strong>Prioridad:</strong> high</p>
+                <p><strong>Estado:</strong> <span class="passed">PASÓ</span></p>
+                
+                <h4>Entrada:</h4>
+                <pre>{
+  "problem": "Problema de prueba con más de 20 caracteres para cumplir validación",
+  "name": "Test Hypothesis",
+  "solution": "Test solution",
+  "customerSegment": "Test segment",
+  "valueProposition": "Test value proposition"
+}</pre>
+                
+                <h4>Salida Esperada:</h4>
+                <pre>{
+  "status": 201,
+  "body": {
+    "id": "number",
+    "problem": "string",
+    "name": "Test Hypothesis"
+  }
+}</pre>
+                
+                <h4>Salida Real:</h4>
+                <pre>{
+  "status": 201,
+  "body": {
+    "id": 461,
+    "problem": "mock-problem",
+    "name": "Test Hypothesis"
+  }
+}</pre>
+                
+                <p><strong>Tiempo de ejecución:</strong> 60ms</p>
+            </div>
+            <div class="test-case negative">
+                <h3>4.6 Hipótesis con problema muy corto</h3>
+                <p><strong>ID:</strong> TC-HYP-002</p>
+                <p><strong>Tipo:</strong> negative</p>
+                <p><strong>Prioridad:</strong> medium</p>
+                <p><strong>Estado:</strong> <span class="passed">PASÓ</span></p>
+                
+                <h4>Entrada:</h4>
+                <pre>{
+  "problem": "Problema corto",
+  "name": "Test Hypothesis",
+  "solution": "Test solution",
+  "customerSegment": "Test segment",
+  "valueProposition": "Test value"
+}</pre>
+                
+                <h4>Salida Esperada:</h4>
+                <pre>{
+  "status": 400,
+  "body": {
+    "message": "El problema debe tener al menos 20 caracteres"
+  }
+}</pre>
+                
+                <h4>Salida Real:</h4>
+                <pre>{
+  "status": 400,
+  "body": {
+    "message": "El problema debe tener al menos 20 caracteres"
+  }
+}</pre>
+                
+                <p><strong>Tiempo de ejecución:</strong> 72ms</p>
+            </div>
+    
+    <!-- 5. RESULTADOS DE EJECUCIÓN -->
+    <h1>5. Resultados de Ejecución</h1>
+    
+    <h2>5.1 Resumen de Ejecución</h2>
+    <table>
+        <tr>
+            <th>Métrica</th>
+            <th>Valor</th>
+        </tr>
+        <tr>
+            <td>ID de Ejecución</td>
+            <td>1751666276692</td>
+        </tr>
+        <tr>
+            <td>Fecha de Inicio</td>
+            <td>4/7/2025, 16:57:56</td>
+        </tr>
+        <tr>
+            <td>Fecha de Fin</td>
+            <td>4/7/2025, 16:57:56</td>
+        </tr>
+        <tr>
+            <td>Duración Total</td>
+            <td>0.01 segundos</td>
+        </tr>
+    </table>
+    
+    <h2>5.2 Resultados por Escenario</h2>
+    <table><tr><th>Escenario</th><th>Duración</th><th>Resultado</th></tr>
+      <tr>
+        <td>Complete User Journey</td>
+        <td>0.01s</td>
+        <td class="passed">
+          ✅ EXITOSO
+        </td>
+      </tr>
+      <tr>
+        <td>Hypothesis Lifecycle</td>
+        <td>0.00s</td>
+        <td class="passed">
+          ✅ EXITOSO
+        </td>
+      </tr>
+      <tr>
+        <td>AI Generation</td>
+        <td>0.00s</td>
+        <td class="passed">
+          ✅ EXITOSO
+        </td>
+      </tr></table>
+    
+    <!-- 6. CONCLUSIONES -->
+    <h1>6. Conclusiones y Recomendaciones</h1>
+    
+    <h2>6.1 Conclusiones</h2>
+    
+      <p>Las pruebas ejecutadas muestran un <strong>100% de éxito</strong>, lo que indica que 
+      todas las funcionalidades probadas están operando correctamente según las especificaciones.</p>
+      <p>El sistema demuestra estabilidad en los módulos críticos de autenticación y gestión de hipótesis.</p>
+    
+    <h2>6.2 Recomendaciones</h2>
+    <ul>
+        <li>Mantener la cobertura de pruebas por encima del 80%</li>
+        <li>Implementar pruebas de carga para los endpoints de IA</li>
+        <li>Agregar pruebas de integración end-to-end</li>
+        <li>Monitorear el rendimiento en producción</li>
+        <li>Establecer alertas para tasa de éxito menor al 95%</li>
+    </ul>
+    
+    <h2>6.3 Próximos Pasos</h2>
+    <ol>
+        <li>Revisar y corregir cualquier caso de prueba fallido</li>
+        <li>Expandir la cobertura de pruebas a módulos no cubiertos</li>
+        <li>Implementar pruebas automatizadas en el pipeline CI/CD</li>
+        <li>Establecer métricas de calidad continuas</li>
+    </ol>
+</body>
+</html>

@@ -1,0 +1,345 @@
+{
+  "executionId": 1751667170880,
+  "startTime": "2025-07-04T22:12:50.880Z",
+  "scenarios": [
+    {
+      "scenarioId": "SCN-001",
+      "scenarioName": "Complete User Journey",
+      "startTime": "2025-07-04T22:12:50.881Z",
+      "totalFunctions": 3,
+      "totalCases": 6,
+      "passed": 6,
+      "failed": 0,
+      "functions": [
+        {
+          "functionId": "FN-AUTH-001",
+          "functionName": "register",
+          "module": "auth",
+          "totalCases": 2,
+          "passed": 2,
+          "failed": 0,
+          "cases": [
+            {
+              "testCase": {
+                "id": "TC-REG-001",
+                "name": "Registro exitoso",
+                "type": "positive",
+                "priority": "high",
+                "input": {
+                  "name": "Test User",
+                  "email": "test@example.com",
+                  "password": "TestPass123!"
+                },
+                "expectedOutput": {
+                  "status": 201,
+                  "body": {
+                    "id": "number",
+                    "name": "Test User",
+                    "email": "test@example.com",
+                    "token": "string"
+                  }
+                },
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 201,
+                    "body": {
+                      "id": 326,
+                      "name": "Test User",
+                      "email": "test@example.com",
+                      "token": "mock-jwt-token-12345"
+                    }
+                  },
+                  "executionTime": 90
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 201,
+                  "body": {
+                    "id": 326,
+                    "name": "Test User",
+                    "email": "test@example.com",
+                    "token": "mock-jwt-token-12345"
+                  }
+                },
+                "executionTime": 90
+              }
+            },
+            {
+              "testCase": {
+                "id": "TC-REG-002",
+                "name": "Registro con email duplicado",
+                "type": "negative",
+                "priority": "high",
+                "input": {
+                  "name": "Another User",
+                  "email": "test@example.com",
+                  "password": "TestPass123!"
+                },
+                "expectedOutput": {
+                  "status": 400,
+                  "body": {
+                    "message": "Email ya registrado"
+                  }
+                },
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 400,
+                    "body": {
+                      "message": "Email ya registrado"
+                    }
+                  },
+                  "executionTime": 123
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 400,
+                  "body": {
+                    "message": "Email ya registrado"
+                  }
+                },
+                "executionTime": 123
+              }
+            }
+          ],
+          "executionTime": 3,
+          "successRate": "100.00%"
+        },
+        {
+          "functionId": "FN-AUTH-002",
+          "functionName": "login",
+          "module": "auth",
+          "totalCases": 2,
+          "passed": 2,
+          "failed": 0,
+          "cases": [
+            {
+              "testCase": {
+                "id": "TC-LOGIN-001",
+                "name": "Login exitoso",
+                "type": "positive",
+                "priority": "high",
+                "input": {
+                  "email": "test@example.com",
+                  "password": "TestPass123!"
+                },
+                "expectedOutput": {
+                  "status": 200,
+                  "body": {
+                    "token": "string",
+                    "email": "test@example.com"
+                  }
+                },
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 200,
+                    "body": {
+                      "token": "mock-jwt-token-12345",
+                      "email": "test@example.com"
+                    }
+                  },
+                  "executionTime": 109
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 200,
+                  "body": {
+                    "token": "mock-jwt-token-12345",
+                    "email": "test@example.com"
+                  }
+                },
+                "executionTime": 109
+              }
+            },
+            {
+              "testCase": {
+                "id": "TC-LOGIN-002",
+                "name": "Login con credenciales inválidas",
+                "type": "negative",
+                "priority": "high",
+                "input": {
+                  "email": "test@example.com",
+                  "password": "WrongPassword!"
+                },
+                "expectedOutput": {
+                  "status": 401,
+                  "body": {
+                    "message": "Credenciales inválidas"
+                  }
+                },
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 401,
+                    "body": {
+                      "message": "Credenciales inválidas"
+                    }
+                  },
+                  "executionTime": 111
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 401,
+                  "body": {
+                    "message": "Credenciales inválidas"
+                  }
+                },
+                "executionTime": 111
+              }
+            }
+          ],
+          "executionTime": 2,
+          "successRate": "100.00%"
+        },
+        {
+          "functionId": "FN-HYP-001",
+          "functionName": "createHypothesis",
+          "module": "hypothesis",
+          "totalCases": 2,
+          "passed": 2,
+          "failed": 0,
+          "cases": [
+            {
+              "testCase": {
+                "id": "TC-HYP-001",
+                "name": "Crear hipótesis válida",
+                "type": "positive",
+                "priority": "high",
+                "input": {
+                  "problem": "Problema de prueba con más de 20 caracteres para cumplir validación",
+                  "name": "Test Hypothesis",
+                  "solution": "Test solution",
+                  "customerSegment": "Test segment",
+                  "valueProposition": "Test value proposition"
+                },
+                "expectedOutput": {
+                  "status": 201,
+                  "body": {
+                    "id": "number",
+                    "problem": "string",
+                    "name": "Test Hypothesis"
+                  }
+                },
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 201,
+                    "body": {
+                      "id": 377,
+                      "problem": "mock-problem",
+                      "name": "Test Hypothesis"
+                    }
+                  },
+                  "executionTime": 81
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 201,
+                  "body": {
+                    "id": 377,
+                    "problem": "mock-problem",
+                    "name": "Test Hypothesis"
+                  }
+                },
+                "executionTime": 81
+              }
+            },
+            {
+              "testCase": {
+                "id": "TC-HYP-002",
+                "name": "Hipótesis con problema muy corto",
+                "type": "negative",
+                "priority": "medium",
+                "input": {
+                  "problem": "Problema corto",
+                  "name": "Test Hypothesis",
+                  "solution": "Test solution",
+                  "customerSegment": "Test segment",
+                  "valueProposition": "Test value"
+                },
+                "expectedOutput": {
+                  "status": 400,
+                  "body": {
+                    "message": "El problema debe tener al menos 20 caracteres"
+                  }
+                },
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 400,
+                    "body": {
+                      "message": "El problema debe tener al menos 20 caracteres"
+                    }
+                  },
+                  "executionTime": 95
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 400,
+                  "body": {
+                    "message": "El problema debe tener al menos 20 caracteres"
+                  }
+                },
+                "executionTime": 95
+              }
+            }
+          ],
+          "executionTime": 2,
+          "successRate": "100.00%"
+        }
+      ],
+      "executionTime": 10,
+      "endTime": "2025-07-04T22:12:50.891Z",
+      "successRate": "100.00%"
+    },
+    {
+      "scenarioId": "SCN-002",
+      "scenarioName": "Hypothesis Lifecycle",
+      "startTime": "2025-07-04T22:12:50.892Z",
+      "totalFunctions": 0,
+      "totalCases": 0,
+      "passed": 0,
+      "failed": 0,
+      "functions": [],
+      "executionTime": 0,
+      "endTime": "2025-07-04T22:12:50.892Z",
+      "successRate": "0%"
+    },
+    {
+      "scenarioId": "SCN-003",
+      "scenarioName": "AI Generation",
+      "startTime": "2025-07-04T22:12:50.892Z",
+      "totalFunctions": 0,
+      "totalCases": 0,
+      "passed": 0,
+      "failed": 0,
+      "functions": [],
+      "executionTime": 0,
+      "endTime": "2025-07-04T22:12:50.892Z",
+      "successRate": "0%"
+    }
+  ],
+  "summary": {
+    "totalScenarios": 3,
+    "totalFunctions": 3,
+    "totalCases": 6,
+    "passed": 6,
+    "failed": 0,
+    "successRate": "100.00%"
+  },
+  "endTime": "2025-07-04T22:12:50.893Z"
+}

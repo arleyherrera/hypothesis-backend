@@ -1,0 +1,257 @@
+{
+  "executionId": 1751668361625,
+  "startTime": "2025-07-04T22:32:41.625Z",
+  "scenarios": [
+    {
+      "scenarioId": "SCN-004",
+      "scenarioName": "Artifact Generation Lifecycle",
+      "startTime": "2025-07-04T22:32:41.626Z",
+      "totalFunctions": 1,
+      "totalCases": 3,
+      "passed": 3,
+      "failed": 0,
+      "functions": [
+        {
+          "functionId": "FN-ART-001",
+          "functionName": "generateArtifacts",
+          "module": "artifacts",
+          "totalCases": 3,
+          "passed": 3,
+          "failed": 0,
+          "cases": [
+            {
+              "testCase": {
+                "id": "TC-ART-POS-001",
+                "name": "Generar artefactos para fase Construir",
+                "description": "Genera los 6 artefactos de la fase construir para una hipótesis válida",
+                "type": "positive",
+                "priority": "high",
+                "input": {
+                  "hypothesisId": 1,
+                  "phase": "construir"
+                },
+                "expectedOutput": {
+                  "status": 201,
+                  "body": {
+                    "message": "6 artefactos generados para construir",
+                    "artifacts": [
+                      {
+                        "name": "MVP Personalizado",
+                        "phase": "construir",
+                        "description": "Plan detallado para construir tu producto mínimo viable."
+                      },
+                      {
+                        "name": "Mapa de Empatía Personalizado",
+                        "phase": "construir",
+                        "description": "Análisis profundo de tu segmento de clientes."
+                      },
+                      {
+                        "name": "Backlog de Funcionalidades",
+                        "phase": "construir",
+                        "description": "Priorización de características críticas para tu MVP."
+                      },
+                      {
+                        "name": "Experimentos de Validación",
+                        "phase": "construir",
+                        "description": "Diseño de experimentos para validar tus supuestos clave."
+                      },
+                      {
+                        "name": "Plan de Recursos",
+                        "phase": "construir",
+                        "description": "Estrategia para optimizar los recursos necesarios."
+                      },
+                      {
+                        "name": "Estrategia de Early Adopters",
+                        "phase": "construir",
+                        "description": "Plan para conseguir tus primeros usuarios."
+                      }
+                    ]
+                  }
+                },
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 201,
+                    "body": {
+                      "message": "6 artefactos generados para construir",
+                      "artifacts": [
+                        {
+                          "name": "MVP Personalizado",
+                          "phase": "construir",
+                          "description": "Plan detallado para construir tu producto mínimo viable."
+                        },
+                        {
+                          "name": "Mapa de Empatía Personalizado",
+                          "phase": "construir",
+                          "description": "Análisis profundo de tu segmento de clientes."
+                        },
+                        {
+                          "name": "Backlog de Funcionalidades",
+                          "phase": "construir",
+                          "description": "Priorización de características críticas para tu MVP."
+                        },
+                        {
+                          "name": "Experimentos de Validación",
+                          "phase": "construir",
+                          "description": "Diseño de experimentos para validar tus supuestos clave."
+                        },
+                        {
+                          "name": "Plan de Recursos",
+                          "phase": "construir",
+                          "description": "Estrategia para optimizar los recursos necesarios."
+                        },
+                        {
+                          "name": "Estrategia de Early Adopters",
+                          "phase": "construir",
+                          "description": "Plan para conseguir tus primeros usuarios."
+                        }
+                      ]
+                    }
+                  },
+                  "executionTime": 84
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 201,
+                  "body": {
+                    "message": "6 artefactos generados para construir",
+                    "artifacts": [
+                      {
+                        "name": "MVP Personalizado",
+                        "phase": "construir",
+                        "description": "Plan detallado para construir tu producto mínimo viable."
+                      },
+                      {
+                        "name": "Mapa de Empatía Personalizado",
+                        "phase": "construir",
+                        "description": "Análisis profundo de tu segmento de clientes."
+                      },
+                      {
+                        "name": "Backlog de Funcionalidades",
+                        "phase": "construir",
+                        "description": "Priorización de características críticas para tu MVP."
+                      },
+                      {
+                        "name": "Experimentos de Validación",
+                        "phase": "construir",
+                        "description": "Diseño de experimentos para validar tus supuestos clave."
+                      },
+                      {
+                        "name": "Plan de Recursos",
+                        "phase": "construir",
+                        "description": "Estrategia para optimizar los recursos necesarios."
+                      },
+                      {
+                        "name": "Estrategia de Early Adopters",
+                        "phase": "construir",
+                        "description": "Plan para conseguir tus primeros usuarios."
+                      }
+                    ]
+                  }
+                },
+                "executionTime": 84
+              }
+            },
+            {
+              "testCase": {
+                "id": "TC-ART-POS-002",
+                "name": "Generar artefactos para fase Medir",
+                "description": "Genera los 6 artefactos de la fase medir",
+                "type": "positive",
+                "priority": "high",
+                "input": {
+                  "hypothesisId": 1,
+                  "phase": "medir"
+                },
+                "expectedOutput": {
+                  "status": 201,
+                  "body": {
+                    "message": "6 artefactos generados para medir",
+                    "artifacts": "array"
+                  }
+                },
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 201,
+                    "body": {
+                      "message": "6 artefactos generados para medir",
+                      "artifacts": "array"
+                    }
+                  },
+                  "executionTime": 100
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 201,
+                  "body": {
+                    "message": "6 artefactos generados para medir",
+                    "artifacts": "array"
+                  }
+                },
+                "executionTime": 100
+              }
+            },
+            {
+              "testCase": {
+                "id": "TC-ART-NEG-001",
+                "name": "Generar artefactos con fase inválida",
+                "description": "Intenta generar artefactos con una fase que no existe",
+                "type": "negative",
+                "priority": "high",
+                "input": {
+                  "hypothesisId": 1,
+                  "phase": "fase-invalida"
+                },
+                "expectedOutput": {
+                  "status": 400,
+                  "body": {
+                    "message": "Fase no válida"
+                  }
+                },
+                "result": {
+                  "passed": true,
+                  "actualOutput": {
+                    "status": 400,
+                    "body": {
+                      "message": "Fase no válida"
+                    }
+                  },
+                  "executionTime": 141
+                }
+              },
+              "result": {
+                "passed": true,
+                "actualOutput": {
+                  "status": 400,
+                  "body": {
+                    "message": "Fase no válida"
+                  }
+                },
+                "executionTime": 141
+              }
+            }
+          ],
+          "executionTime": 4,
+          "successRate": "100.00%"
+        }
+      ],
+      "executionTime": 6,
+      "endTime": "2025-07-04T22:32:41.632Z",
+      "successRate": "100.00%"
+    }
+  ],
+  "summary": {
+    "totalScenarios": 1,
+    "totalFunctions": 1,
+    "totalCases": 3,
+    "passed": 3,
+    "failed": 0,
+    "successRate": "100.00%"
+  },
+  "endTime": "2025-07-04T22:32:41.633Z"
+}
