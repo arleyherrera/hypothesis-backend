@@ -11,7 +11,7 @@ router.use(authMiddleware);
 // NUEVA RUTA - Agregar antes de las otras rutas
 router.post('/generate-from-problem', aiController.generateHypothesisFromProblem);
 
-// Rutas existentes
+// Rutas existentes nuevas rutas existentes
 router.get('/', hypothesisController.getHypotheses);
 router.get('/:id', hypothesisController.getHypothesisById);
 router.post('/', hypothesisController.createHypothesis);

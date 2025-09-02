@@ -39,7 +39,18 @@
      "test:detailed": "node tests/execution/runners/DetailedConsoleRunner.js",
     "test:detailed:save": "node tests/execution/runners/DetailedConsoleRunner.js > test-output.txt 2>&1",
     "test:artifacts": "node tests/execution/runners/ArtifactTestRunner.js",
-    "test:artifacts:detailed": "node tests/execution/runners/ArtifactTestRunner.js > test-artifacts-detailed.txt 2>&1"
+    "test:artifacts:detailed": "node tests/execution/runners/ArtifactTestRunner.js > test-artifacts-detailed.txt 2>&1",
+        "validate:coherence": "node tests/validation/coherenceValidation.js",
+    "validate:auth": "node tests/validation/authenticationValidation.js",
+    "validate:generation": "node tests/validation/artifactGenerationValidation.js",
+    "validate:all": "node tests/validation/runAllValidations.js",
+   "validate:report": "npm run validate:all && open tests/validation/validation-report-*.html",
+    "analyze:hypothesis": "node tests/validation/analyzeSpecificHypothesis.js",
+     "test:metrics": "node scripts/run-metrics-validation.js",
+  "test:metrics:detailed": "jest tests/metrics --verbose",
+  "test:objetivo1": "jest tests/metrics/objetivo1-semantic-evaluation.test.js --verbose",
+  "test:objetivo3": "jest tests/metrics/objetivo3-ai-generation.test.js --verbose",
+  "test:objetivo4": "jest tests/metrics/objetivo4-architecture.test.js --verbose"
   },
   "engines": {
     "node": ">=14.0.0",

@@ -1,0 +1,723 @@
+{
+  "timestamp": "2025-07-14T05:29:00.470Z",
+  "hypothesisId": "119",
+  "hypothesis": {
+    "id": 119,
+    "name": "Creemos que adultos 65+ en CDMX con enfermedades crónicas tienen el problema de no agendar citas médicas online. Si les ofrecemos app con botón de llamada directa a clínicas, entonces 70% completará citas en 1 semana",
+    "problem": "Muchos adultos mayores en zonas urbanas de América Latina experimentan dificultades para acceder a servicios de salud de manera oportuna debido a barreras tecnológicas, falta de movilidad y desconocimiento de plataformas digitales. Esto genera demoras en la atención médica, empeoramiento de enfermedades crónicas y una mayor carga sobre familiares o cuidadores.\n\n",
+    "solution": "App minimalista con 3 funciones: 1) Botón grande 'Llamar ahora', 2) Listado de clínicas cercanas con horarios, 3) Recordatorio por SMS. Implementación: PWA con Twilio para llamadas, desplegada en 3 semanas",
+    "customerSegment": "Adultos 65-80 años en CDMX, con diabetes/hipertensión, que dependen de familiares para agendar citas. Actualmente llaman por teléfono fijo. Encontrarlos en centros de salud públicos y grupos de la tercera edad",
+    "valueProposition": "Reduce tiempo de agendar cita de 3 días a 10 min, evitando complicaciones por demoras. 10x mejor que llamar manualmente: muestra disponibilidad real. Métrica: 70% de usuarios completa ≥1 cita en 7 días",
+    "userId": 6,
+    "userName": "hhh",
+    "userEmail": "hhh@gmail.com",
+    "createdAt": "2025-07-13T23:36:59.284Z"
+  },
+  "artifacts": {
+    "total": 30,
+    "byPhase": [
+      {
+        "phase": "construir",
+        "count": 6,
+        "artifacts": [
+          {
+            "id": 368,
+            "name": "MVP Personalizado (IA)",
+            "contentLength": 5535,
+            "createdAt": "2025-07-13T23:38:21.490Z"
+          },
+          {
+            "id": 369,
+            "name": "Mapa de Empatía Personalizado (IA)",
+            "contentLength": 5745,
+            "createdAt": "2025-07-13T23:39:23.514Z"
+          },
+          {
+            "id": 370,
+            "name": "Backlog de Funcionalidades (IA)",
+            "contentLength": 4854,
+            "createdAt": "2025-07-13T23:40:16.080Z"
+          },
+          {
+            "id": 371,
+            "name": "Experimentos de Validación (IA)",
+            "contentLength": 5580,
+            "createdAt": "2025-07-13T23:41:16.677Z"
+          },
+          {
+            "id": 372,
+            "name": "Plan de Recursos (IA)",
+            "contentLength": 6013,
+            "createdAt": "2025-07-13T23:42:19.937Z"
+          },
+          {
+            "id": 373,
+            "name": "Estrategia de Early Adopters (IA)",
+            "contentLength": 4928,
+            "createdAt": "2025-07-13T23:43:15.396Z"
+          }
+        ]
+      },
+      {
+        "phase": "medir",
+        "count": 6,
+        "artifacts": [
+          {
+            "id": 374,
+            "name": "Framework de KPIs Personalizado (IA)",
+            "contentLength": 5438,
+            "createdAt": "2025-07-13T23:45:55.371Z"
+          },
+          {
+            "id": 375,
+            "name": "Plan de Analítica (IA)",
+            "contentLength": 5589,
+            "createdAt": "2025-07-13T23:47:02.512Z"
+          },
+          {
+            "id": 376,
+            "name": "Diseño de Tests A/B (IA)",
+            "contentLength": 6309,
+            "createdAt": "2025-07-13T23:48:15.359Z"
+          },
+          {
+            "id": 377,
+            "name": "Embudo de Conversión (IA)",
+            "contentLength": 4566,
+            "createdAt": "2025-07-13T23:49:06.195Z"
+          },
+          {
+            "id": 378,
+            "name": "Sistema de Retroalimentación (IA)",
+            "contentLength": 6097,
+            "createdAt": "2025-07-13T23:50:14.382Z"
+          },
+          {
+            "id": 379,
+            "name": "Dashboard de Métricas (IA)",
+            "contentLength": 4254,
+            "createdAt": "2025-07-13T23:51:03.829Z"
+          }
+        ]
+      },
+      {
+        "phase": "aprender",
+        "count": 6,
+        "artifacts": [
+          {
+            "id": 380,
+            "name": "Framework de Análisis (IA)",
+            "contentLength": 4716,
+            "createdAt": "2025-07-13T23:54:57.915Z"
+          },
+          {
+            "id": 381,
+            "name": "Matriz de Aprendizajes (IA)",
+            "contentLength": 5424,
+            "createdAt": "2025-07-13T23:55:57.904Z"
+          },
+          {
+            "id": 382,
+            "name": "Validación de Hipótesis (IA)",
+            "contentLength": 5153,
+            "createdAt": "2025-07-13T23:56:56.323Z"
+          },
+          {
+            "id": 383,
+            "name": "Identificación de Patrones (IA)",
+            "contentLength": 5999,
+            "createdAt": "2025-07-13T23:58:05.782Z"
+          },
+          {
+            "id": 384,
+            "name": "Guía de Entrevistas (IA)",
+            "contentLength": 5029,
+            "createdAt": "2025-07-13T23:59:03.899Z"
+          },
+          {
+            "id": 385,
+            "name": "Plan de Iteración (IA)",
+            "contentLength": 5794,
+            "createdAt": "2025-07-14T00:00:11.224Z"
+          }
+        ]
+      },
+      {
+        "phase": "pivotar",
+        "count": 6,
+        "artifacts": [
+          {
+            "id": 386,
+            "name": "Matriz de Decisión (IA)",
+            "contentLength": 6268,
+            "createdAt": "2025-07-14T00:02:55.617Z"
+          },
+          {
+            "id": 387,
+            "name": "Análisis de Oportunidades (IA)",
+            "contentLength": 4914,
+            "createdAt": "2025-07-14T00:03:57.282Z"
+          },
+          {
+            "id": 388,
+            "name": "Plan de Transición (IA)",
+            "contentLength": 6743,
+            "createdAt": "2025-07-14T00:05:08.090Z"
+          },
+          {
+            "id": 389,
+            "name": "Comunicación de Cambios (IA)",
+            "contentLength": 6899,
+            "createdAt": "2025-07-14T00:06:21.582Z"
+          },
+          {
+            "id": 390,
+            "name": "Redefinición de Mercado (IA)",
+            "contentLength": 5870,
+            "createdAt": "2025-07-14T00:07:29.305Z"
+          },
+          {
+            "id": 391,
+            "name": "Validación Rápida (IA)",
+            "contentLength": 5744,
+            "createdAt": "2025-07-14T00:08:33.163Z"
+          }
+        ]
+      },
+      {
+        "phase": "iterar",
+        "count": 6,
+        "artifacts": [
+          {
+            "id": 392,
+            "name": "Plan de Optimización (IA)",
+            "contentLength": 6828,
+            "createdAt": "2025-07-14T00:16:38.329Z"
+          },
+          {
+            "id": 393,
+            "name": "Priorización RICE (IA)",
+            "contentLength": 5740,
+            "createdAt": "2025-07-14T00:17:44.761Z"
+          },
+          {
+            "id": 394,
+            "name": "Roadmap de Iteración (IA)",
+            "contentLength": 5891,
+            "createdAt": "2025-07-14T00:18:49.546Z"
+          },
+          {
+            "id": 395,
+            "name": "Matriz de Impacto (IA)",
+            "contentLength": 6772,
+            "createdAt": "2025-07-14T00:20:06.776Z"
+          },
+          {
+            "id": 396,
+            "name": "Estrategia de Crecimiento (IA)",
+            "contentLength": 5791,
+            "createdAt": "2025-07-14T00:21:11.387Z"
+          },
+          {
+            "id": 397,
+            "name": "Sistema de Feedback Loop (IA)",
+            "contentLength": 4946,
+            "createdAt": "2025-07-14T00:22:07.705Z"
+          }
+        ]
+      }
+    ]
+  },
+  "coherenceAnalysis": {
+    "globalScore": 0.11036583024376911,
+    "phaseCoherence": {
+      "construir": 0.11272358215989045,
+      "medir": 0.10971888551318054,
+      "aprender": 0.12003584632015145
+    },
+    "recommendation": "Baja coherencia. Revise y actualice artefactos para mantener consistencia.",
+    "averageScore": 0.22000000000000008,
+    "detailedScores": [
+      {
+        "artifactId": 380,
+        "artifactName": "Framework de Análisis (IA)",
+        "phase": "aprender",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 685,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 381,
+        "artifactName": "Matriz de Aprendizajes (IA)",
+        "phase": "aprender",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 810,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 382,
+        "artifactName": "Validación de Hipótesis (IA)",
+        "phase": "aprender",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 727,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 383,
+        "artifactName": "Identificación de Patrones (IA)",
+        "phase": "aprender",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 855,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 384,
+        "artifactName": "Guía de Entrevistas (IA)",
+        "phase": "aprender",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 743,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 385,
+        "artifactName": "Plan de Iteración (IA)",
+        "phase": "aprender",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 842,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 368,
+        "artifactName": "MVP Personalizado (IA)",
+        "phase": "construir",
+        "coherenceScore": 0.35,
+        "analysis": {
+          "wordCount": 818,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": true,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 369,
+        "artifactName": "Mapa de Empatía Personalizado (IA)",
+        "phase": "construir",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 851,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 370,
+        "artifactName": "Backlog de Funcionalidades (IA)",
+        "phase": "construir",
+        "coherenceScore": 0.35,
+        "analysis": {
+          "wordCount": 691,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": true,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 371,
+        "artifactName": "Experimentos de Validación (IA)",
+        "phase": "construir",
+        "coherenceScore": 0.35,
+        "analysis": {
+          "wordCount": 821,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": true,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 372,
+        "artifactName": "Plan de Recursos (IA)",
+        "phase": "construir",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 789,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 373,
+        "artifactName": "Estrategia de Early Adopters (IA)",
+        "phase": "construir",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 687,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 392,
+        "artifactName": "Plan de Optimización (IA)",
+        "phase": "iterar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 978,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 393,
+        "artifactName": "Priorización RICE (IA)",
+        "phase": "iterar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 861,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 394,
+        "artifactName": "Roadmap de Iteración (IA)",
+        "phase": "iterar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 894,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 395,
+        "artifactName": "Matriz de Impacto (IA)",
+        "phase": "iterar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 990,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 396,
+        "artifactName": "Estrategia de Crecimiento (IA)",
+        "phase": "iterar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 888,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 397,
+        "artifactName": "Sistema de Feedback Loop (IA)",
+        "phase": "iterar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 717,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 374,
+        "artifactName": "Framework de KPIs Personalizado (IA)",
+        "phase": "medir",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 777,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 375,
+        "artifactName": "Plan de Analítica (IA)",
+        "phase": "medir",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 756,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 376,
+        "artifactName": "Diseño de Tests A/B (IA)",
+        "phase": "medir",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 921,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 377,
+        "artifactName": "Embudo de Conversión (IA)",
+        "phase": "medir",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 647,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 378,
+        "artifactName": "Sistema de Retroalimentación (IA)",
+        "phase": "medir",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 888,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 379,
+        "artifactName": "Dashboard de Métricas (IA)",
+        "phase": "medir",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 606,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 386,
+        "artifactName": "Matriz de Decisión (IA)",
+        "phase": "pivotar",
+        "coherenceScore": 0.35,
+        "analysis": {
+          "wordCount": 873,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": true,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 387,
+        "artifactName": "Análisis de Oportunidades (IA)",
+        "phase": "pivotar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 680,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 388,
+        "artifactName": "Plan de Transición (IA)",
+        "phase": "pivotar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 1004,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 389,
+        "artifactName": "Comunicación de Cambios (IA)",
+        "phase": "pivotar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 991,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 390,
+        "artifactName": "Redefinición de Mercado (IA)",
+        "phase": "pivotar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 848,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      },
+      {
+        "artifactId": 391,
+        "artifactName": "Validación Rápida (IA)",
+        "phase": "pivotar",
+        "coherenceScore": 0.2,
+        "analysis": {
+          "wordCount": 869,
+          "hasMarkdownStructure": true,
+          "mentionsProblem": false,
+          "mentionsSolution": false,
+          "mentionsCustomerSegment": false,
+          "mentionsValueProposition": false,
+          "isAIGenerated": true,
+          "isTemplate": false
+        }
+      }
+    ]
+  }
+}
