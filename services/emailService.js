@@ -248,7 +248,7 @@ Este es un correo automático, por favor no respondas a este mensaje.
     }
 
     // Fallback: usar SMTP si no hay API key
-    const transporter = createTransporter();
+    const smtpTransporter = createTransporter();
     const mailOptions = {
       from: `"${fromName}" <${fromEmail}>`,
       to: email,
@@ -257,7 +257,7 @@ Este es un correo automático, por favor no respondas a este mensaje.
       html: htmlContent
     };
 
-    const info = await transporter.sendMail(mailOptions);
+    const info = await smtpTransporter.sendMail(mailOptions);
     console.log('✅ Email de reseteo enviado via SMTP:', info.messageId);
 
     return {
@@ -280,7 +280,7 @@ Este es un correo automático, por favor no respondas a este mensaje.
  */
 const sendPasswordChangedEmail = async (email, userName) => {
   try {
-    const fromEmail = process.env.EMAIL_FROM || process.env.EMAIL_USER || 'noreply@hypothesis.com';
+    const fromEmail = process.env.EMAIL_FROM || process.env.EMAIL_USER || 'arleycordova2015@gmail.com';
     const fromName = process.env.EMAIL_FROM_NAME || 'Hypothesis Manager';
     const frontendURL = process.env.FRONTEND_URL || 'https://hypothesis-manager-ksjs.vercel.app';
 
@@ -437,7 +437,7 @@ Este es un correo automático, por favor no respondas a este mensaje.
     }
 
     // Fallback: usar SMTP si no hay API key
-    const transporter = createTransporter();
+    const smtpTransporter = createTransporter();
     const mailOptions = {
       from: `"${fromName}" <${fromEmail}>`,
       to: email,
@@ -446,7 +446,7 @@ Este es un correo automático, por favor no respondas a este mensaje.
       html: htmlContent
     };
 
-    const info = await transporter.sendMail(mailOptions);
+    const info = await smtpTransporter.sendMail(mailOptions);
     console.log('✅ Email de confirmación enviado via SMTP:', info.messageId);
 
     return {
