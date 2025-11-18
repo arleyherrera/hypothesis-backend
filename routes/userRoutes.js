@@ -1,40 +1,39 @@
-// routes/userRoutes.js
+// routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
+const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/auth');
-const { sanitizeAuth } = require('../middleware/sanitize');
 const validateRequest = require('../middleware/validateRequest');
-const { updateProfileValidation, deleteAccountValidation } = require('./validators/userValidators');
+const { sanitizeAuth } = require('../middleware/sanitize');
+const { registerValidation, loginValidation } = require('./validators/authValidators');
 
-// Aplicar middleware de autenticación a todas las rutas
-router.use(authMiddleware);
-
-// @route   GET /api/users/profile
-// @desc    Obtener perfil del usuario actual
-// @access  Private
-router.get('/profile', userController.getProfile);
-
-// @route   PUT /api/users/profile
-// @desc    Actualizar perfil del usuario
-// @access  Private
-router.put(
-  '/profile',
-  sanitizeAuth,
-  updateProfileValidation,
-  validateRequest,
-  userController.updateProfile
+// Rutas públicas con validación y sanitización
+router.post('/register',
+  sanitizeAuth, // Primero sanitizar
+  registerValidation, // Luego validar
+  validateRequest, // Verificar errores de validación
+  authController.register
 );
 
-// @route   DELETE /api/users/account
-// @desc    Eliminar cuenta de usuario
-// @access  Private
-router.delete(
-  '/account',
+router.post('/login',
   sanitizeAuth,
-  deleteAccountValidation,
+  loginValidation,
   validateRequest,
-  userController.deleteAccount
+  authController.login
 );
+
+// Rutas de recuperación de contraseña
+router.post('/forgot-password',
+  sanitizeAuth,
+  authController.forgotPassword
+);
+
+router.post('/reset-password/:token',
+  sanitizeAuth,
+  authController.resetPassword
+);
+
+// Rutas protegidas
+router.get('/me', authMiddleware, authController.getMe);
 
 module.exports = router;

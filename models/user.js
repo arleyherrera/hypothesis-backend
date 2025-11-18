@@ -129,6 +129,16 @@ module.exports = (sequelize, DataTypes) => {
           }
         }
       }
+    },
+    resetPasswordToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
     }
   }, {
     hooks: {
