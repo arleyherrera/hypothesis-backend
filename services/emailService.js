@@ -56,7 +56,7 @@ const sendPasswordResetEmail = async (email, resetToken, userName) => {
     const transporter = createTransporter();
 
     // URL del frontend para resetear contraseña
-    const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const frontendURL = process.env.FRONTEND_URL || 'https://hypothesis-manager-ksjs.vercel.app';
     const resetURL = `${frontendURL}/reset-password/${resetToken}`;
 
     // Configurar remitente
@@ -237,7 +237,7 @@ const sendPasswordChangedEmail = async (email, userName) => {
 
     const fromEmail = process.env.EMAIL_FROM || process.env.EMAIL_USER || 'noreply@hypothesis.com';
     const fromName = process.env.EMAIL_FROM_NAME || 'Hypothesis Manager';
-    const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const frontendURL = process.env.FRONTEND_URL || 'https://hypothesis-manager-ksjs.vercel.app';
 
     const htmlContent = `
       <!DOCTYPE html>
