@@ -5,17 +5,25 @@ const validator = require('validator');
  * Sanitiza los inputs para prevenir XSS y otros ataques
  */
 const sanitizeInputs = (req, res, next) => {
+  // Campos que no deben ser sanitizados (passwords, tokens, etc.)
+  const excludeFields = ['password', 'currentPassword', 'newPassword', 'token'];
+
   // Función recursiva para sanitizar objetos
-  const sanitizeObject = (obj) => {
+  const sanitizeObject = (obj, parentKey = '') => {
     for (let key in obj) {
       if (obj.hasOwnProperty(key)) {
+        // No sanitizar campos de contraseña
+        if (excludeFields.includes(key)) {
+          continue;
+        }
+
         if (typeof obj[key] === 'string') {
           // Remover tags HTML y scripts
           obj[key] = validator.escape(obj[key]);
           // Remover caracteres de control
           obj[key] = obj[key].replace(/[\x00-\x1F\x7F]/g, '');
         } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-          sanitizeObject(obj[key]);
+          sanitizeObject(obj[key], key);
         }
       }
     }

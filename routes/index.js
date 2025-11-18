@@ -3,11 +3,13 @@ const router = express.Router();
 
 // Importar todas las rutas
 const authRoutes = require('./authRoutes');
+const userRoutes = require('./userRoutes');
 const hypothesisRoutes = require('./hypothesisRoutes');
 const artifactRoutes = require('./artifactRoutes');
 
 // Rutas de la API
 router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
 router.use('/hypotheses', hypothesisRoutes);
 router.use('/artifacts', artifactRoutes);
 

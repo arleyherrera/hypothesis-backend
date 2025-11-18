@@ -1,39 +1,20 @@
 // routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/authController');
+const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/auth');
-const validateRequest = require('../middleware/validateRequest');
 const { sanitizeAuth } = require('../middleware/sanitize');
-const { registerValidation, loginValidation } = require('./validators/authValidators');
 
-// Rutas públicas con validación y sanitización
-router.post('/register',
-  sanitizeAuth, // Primero sanitizar
-  registerValidation, // Luego validar
-  validateRequest, // Verificar errores de validación
-  authController.register
-);
+// Todas las rutas de usuario requieren autenticación
+router.use(authMiddleware);
 
-router.post('/login',
-  sanitizeAuth,
-  loginValidation,
-  validateRequest,
-  authController.login
-);
+// GET /api/users/profile - Obtener perfil del usuario
+router.get('/profile', userController.getProfile);
 
-// Rutas de recuperación de contraseña
-router.post('/forgot-password',
-  sanitizeAuth,
-  authController.forgotPassword
-);
+// PUT /api/users/profile - Actualizar perfil del usuario
+router.put('/profile', sanitizeAuth, userController.updateProfile);
 
-router.post('/reset-password/:token',
-  sanitizeAuth,
-  authController.resetPassword
-);
-
-// Rutas protegidas
-router.get('/me', authMiddleware, authController.getMe);
+// DELETE /api/users/account - Eliminar cuenta del usuario
+router.delete('/account', userController.deleteAccount);
 
 module.exports = router;
