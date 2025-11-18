@@ -1,18 +1,51 @@
 // services/emailService.js
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 
-// Configuración del transportador de email
+// Función para enviar email usando SendGrid API REST
+const sendEmailViaSendGridAPI = async (to, subject, html, text) => {
+  const response = await axios.post(
+    'https://api.sendgrid.com/v3/mail/send',
+    {
+      personalizations: [{
+        to: [{ email: to }],
+        subject: subject
+      }],
+      from: {
+        email: process.env.EMAIL_FROM || 'arleycordova2015@gmail.com',
+        name: process.env.EMAIL_FROM_NAME || 'Hypothesis Manager'
+      },
+      content: [
+        { type: 'text/plain', value: text },
+        { type: 'text/html', value: html }
+      ]
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${process.env.SENDGRID_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      timeout: 15000 // 15 segundos timeout
+    }
+  );
+  return response;
+};
+
+// Configuración del transportador de email (fallback SMTP)
 const createTransporter = () => {
-  // Opción 1: SendGrid (Producción - Recomendado)
-  if (process.env.SENDGRID_API_KEY) {
+  // Opción 1: SendGrid SMTP (si API no está disponible)
+  if (process.env.SENDGRID_API_KEY && !process.env.USE_SENDGRID_API) {
     return nodemailer.createTransport({
       host: 'smtp.sendgrid.net',
       port: 587,
-      secure: false, // true para 465, false para otros puertos
+      secure: false,
       auth: {
-        user: 'apikey', // Este es literal 'apikey'
+        user: 'apikey',
         pass: process.env.SENDGRID_API_KEY
-      }
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000
     });
   }
 
@@ -53,8 +86,6 @@ const createTransporter = () => {
  */
 const sendPasswordResetEmail = async (email, resetToken, userName) => {
   try {
-    const transporter = createTransporter();
-
     // URL del frontend para resetear contraseña
     const frontendURL = process.env.FRONTEND_URL || 'https://hypothesis-manager-ksjs.vercel.app';
     const resetURL = `${frontendURL}/reset-password/${resetToken}`;
@@ -194,7 +225,30 @@ Este es un correo automático, por favor no respondas a este mensaje.
 © ${new Date().getFullYear()} Hypothesis Manager. Todos los derechos reservados.
     `;
 
-    // Opciones del email
+    // Enviar email usando SendGrid API REST (más confiable)
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        const response = await sendEmailViaSendGridAPI(
+          email,
+          '🔐 Restablece tu contraseña - Hypothesis Manager',
+          htmlContent,
+          textContent
+        );
+
+        console.log('✅ Email de reseteo enviado via SendGrid API');
+
+        return {
+          success: true,
+          messageId: response.headers['x-message-id'] || 'sendgrid-api'
+        };
+      } catch (apiError) {
+        console.error('❌ Error con SendGrid API:', apiError.response?.data || apiError.message);
+        throw new Error('No se pudo enviar el email de reseteo');
+      }
+    }
+
+    // Fallback: usar SMTP si no hay API key
+    const transporter = createTransporter();
     const mailOptions = {
       from: `"${fromName}" <${fromEmail}>`,
       to: email,
@@ -203,15 +257,8 @@ Este es un correo automático, por favor no respondas a este mensaje.
       html: htmlContent
     };
 
-    // Enviar email
     const info = await transporter.sendMail(mailOptions);
-
-    console.log('✅ Email de reseteo enviado:', info.messageId);
-
-    // Si es Ethereal, mostrar URL de preview
-    if (process.env.NODE_ENV === 'development' && !process.env.SENDGRID_API_KEY) {
-      console.log('📧 Preview URL (Ethereal):', nodemailer.getTestMessageUrl(info));
-    }
+    console.log('✅ Email de reseteo enviado via SMTP:', info.messageId);
 
     return {
       success: true,
@@ -233,8 +280,6 @@ Este es un correo automático, por favor no respondas a este mensaje.
  */
 const sendPasswordChangedEmail = async (email, userName) => {
   try {
-    const transporter = createTransporter();
-
     const fromEmail = process.env.EMAIL_FROM || process.env.EMAIL_USER || 'noreply@hypothesis.com';
     const fromName = process.env.EMAIL_FROM_NAME || 'Hypothesis Manager';
     const frontendURL = process.env.FRONTEND_URL || 'https://hypothesis-manager-ksjs.vercel.app';
@@ -365,6 +410,34 @@ Este es un correo automático, por favor no respondas a este mensaje.
 © ${new Date().getFullYear()} Hypothesis Manager. Todos los derechos reservados.
     `;
 
+    // Enviar email usando SendGrid API REST (más confiable)
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        await sendEmailViaSendGridAPI(
+          email,
+          '✅ Contraseña actualizada exitosamente - Hypothesis Manager',
+          htmlContent,
+          textContent
+        );
+
+        console.log('✅ Email de confirmación enviado via SendGrid API');
+
+        return {
+          success: true,
+          messageId: 'sendgrid-api'
+        };
+      } catch (apiError) {
+        console.error('❌ Error con SendGrid API (confirmación):', apiError.response?.data || apiError.message);
+        // No fallar si el email de confirmación falla
+        return {
+          success: false,
+          error: apiError.message
+        };
+      }
+    }
+
+    // Fallback: usar SMTP si no hay API key
+    const transporter = createTransporter();
     const mailOptions = {
       from: `"${fromName}" <${fromEmail}>`,
       to: email,
@@ -374,8 +447,7 @@ Este es un correo automático, por favor no respondas a este mensaje.
     };
 
     const info = await transporter.sendMail(mailOptions);
-
-    console.log('✅ Email de confirmación enviado:', info.messageId);
+    console.log('✅ Email de confirmación enviado via SMTP:', info.messageId);
 
     return {
       success: true,
