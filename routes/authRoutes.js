@@ -15,11 +15,22 @@ router.post('/register',
   authController.register
 );
 
-router.post('/login', 
+router.post('/login',
   sanitizeAuth,
-  loginValidation, 
-  validateRequest, 
+  loginValidation,
+  validateRequest,
   authController.login
+);
+
+// Rutas de recuperación de contraseña
+router.post('/forgot-password',
+  sanitizeAuth,
+  authController.forgotPassword
+);
+
+router.post('/reset-password/:token',
+  sanitizeAuth,
+  authController.resetPassword
 );
 
 // Rutas protegidas
