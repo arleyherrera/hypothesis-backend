@@ -206,6 +206,11 @@ exports.resetPassword = async (req, res) => {
 
     logOperation('Reset Password', { token: token.substring(0, 10) + '...' });
 
+    // 🔍 DEBUG: Ver qué llega exactamente
+    console.log('🔍 DEBUG - Password recibida:', password);
+    console.log('🔍 DEBUG - Longitud:', password ? password.length : 'undefined');
+    console.log('🔍 DEBUG - req.body completo:', JSON.stringify(req.body));
+
     // Validar que la contraseña esté presente
     if (!password) {
       return res.status(400).json({
