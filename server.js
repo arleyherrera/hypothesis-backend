@@ -139,6 +139,9 @@ app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 app.use('/api/auth', require('./routes/authRoutes'));
 
+// Rutas de usuario
+app.use('/api/users', require('./routes/userRoutes'));
+
 // Rutas protegidas
 app.use('/api/hypotheses', require('./routes/hypothesisRoutes'));
 
