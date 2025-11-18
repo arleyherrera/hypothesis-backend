@@ -1,284 +1,210 @@
-// controllers/authController.js
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
+// controllers/userController.js
 const { User } = require('../models');
-const { handleError, validateRequiredFields, logOperation } = require('../helpers/controllerUtils');
-const { sendPasswordResetEmail, sendPasswordChangedEmail } = require('../services/emailService');
+const { handleError, logOperation } = require('../helpers/controllerUtils');
+const bcrypt = require('bcryptjs');
 
-const JWT_CONFIG = {
-  SECRET: process.env.JWT_SECRET || 'fallback_secret_key_for_development',
-  EXPIRES_IN: process.env.JWT_EXPIRES_IN || '30d'
-};
-
-const generateToken = (id) => jwt.sign({ id }, JWT_CONFIG.SECRET, { expiresIn: JWT_CONFIG.EXPIRES_IN });
-
-const createUserResponse = (user) => ({
-  id: user.id,
-  name: user.name,
-  email: user.email,
-  token: generateToken(user.id)
-});
-
-exports.register = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    logOperation('Registro', { email });
-    
-    // Verificar si el usuario ya existe
-    const userExists = await User.findOne({ where: { email: email.toLowerCase() } });
-    if (userExists) {
-      return res.status(400).json({ 
-        message: 'Ya existe una cuenta con este correo electrónico',
-        field: 'email'
-      });
-    }
-    
-    // Limpiar datos antes de guardar
-    const cleanedData = {
-      name: name.trim(),
-      email: email.toLowerCase().trim(),
-      password: password // La contraseña se hashea en el modelo
-    };
-    
-    // Crear usuario
-    const user = await User.create(cleanedData);
-    
-    // Log exitoso
-    logOperation('Usuario registrado exitosamente', { 
-      userId: user.id, 
-      email: user.email 
-    });
-    
-    res.status(201).json(createUserResponse(user));
-  } catch (error) {
-    // Manejar errores específicos de Sequelize
-    if (error.name === 'SequelizeValidationError') {
-      const validationErrors = error.errors.map(err => ({
-        field: err.path,
-        message: err.message
-      }));
-      
-      return res.status(400).json({
-        message: 'Error de validación en los datos',
-        errors: validationErrors
-      });
-    }
-    
-    if (error.name === 'SequelizeUniqueConstraintError') {
-      return res.status(400).json({
-        message: 'El correo electrónico ya está registrado',
-        field: 'email'
-      });
-    }
-    
-    handleError(res, error, 'Error al registrar usuario');
-  }
-};
-
-exports.login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    logOperation('Login', { email });
-    
-    // Buscar usuario (case insensitive)
-    const user = await User.findOne({ 
-      where: { 
-        email: email.toLowerCase().trim() 
-      } 
-    });
-    
-    if (!user) {
-      return res.status(401).json({ 
-        message: 'Correo electrónico o contraseña incorrectos',
-        field: 'email'
-      });
-    }
-    
-    // Verificar contraseña
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ 
-        message: 'Correo electrónico o contraseña incorrectos',
-        field: 'password'
-      });
-    }
-    
-    // Log exitoso
-    logOperation('Login exitoso', { userId: user.id, email: user.email });
-    
-    res.json(createUserResponse(user));
-  } catch (error) {
-    handleError(res, error, 'Error al iniciar sesión');
-  }
-};
-
-exports.getMe = async (req, res) => {
+/**
+ * Obtener perfil del usuario actual
+ */
+exports.getProfile = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: ['id', 'name', 'email', 'createdAt']
+      attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt']
     });
 
     if (!user) {
-      return res.status(404).json({
-        message: 'Usuario no encontrado'
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    logOperation('Perfil consultado', { userId: user.id, email: user.email });
+
+    res.status(200).json({
+      message: 'Perfil obtenido exitosamente',
+      user
+    });
+  } catch (error) {
+    console.error('❌ Error al obtener perfil:', error);
+    handleError(res, error, 'Error al obtener el perfil');
+  }
+};
+
+/**
+ * Actualizar perfil del usuario
+ * Permite actualizar: name, email, y opcionalmente password
+ */
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, email, currentPassword, newPassword } = req.body;
+
+    logOperation('Solicitud de actualización de perfil', {
+      userId: req.user.id,
+      fieldsToUpdate: { name: !!name, email: !!email, password: !!newPassword }
+    });
+
+    // Buscar usuario
+    const user = await User.findByPk(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Preparar datos a actualizar
+    const updates = {};
+
+    // Actualizar nombre si se proporciona
+    if (name && name !== user.name) {
+      updates.name = name.trim();
+    }
+
+    // Actualizar email si se proporciona y es diferente
+    if (email && email.toLowerCase() !== user.email.toLowerCase()) {
+      // Verificar que el nuevo email no esté en uso
+      const emailExists = await User.findOne({
+        where: { email: email.toLowerCase() }
+      });
+
+      if (emailExists && emailExists.id !== user.id) {
+        return res.status(400).json({
+          message: 'Este correo electrónico ya está en uso',
+          field: 'email'
+        });
+      }
+
+      updates.email = email.toLowerCase().trim();
+    }
+
+    // Actualizar contraseña si se proporciona
+    if (newPassword) {
+      // Verificar que se proporcionó la contraseña actual
+      if (!currentPassword) {
+        return res.status(400).json({
+          message: 'Debe proporcionar su contraseña actual para cambiarla',
+          field: 'currentPassword'
+        });
+      }
+
+      // Verificar contraseña actual
+      const isPasswordValid = await user.matchPassword(currentPassword);
+      if (!isPasswordValid) {
+        return res.status(401).json({
+          message: 'La contraseña actual es incorrecta',
+          field: 'currentPassword'
+        });
+      }
+
+      // Verificar que la nueva contraseña sea diferente
+      const isSamePassword = await bcrypt.compare(newPassword, user.password);
+      if (isSamePassword) {
+        return res.status(400).json({
+          message: 'La nueva contraseña debe ser diferente a la actual',
+          field: 'newPassword'
+        });
+      }
+
+      updates.password = newPassword;
+    }
+
+    // Verificar que haya algo para actualizar
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({
+        message: 'No se proporcionaron cambios para actualizar'
       });
     }
 
-    res.json({
+    // Actualizar usuario
+    await user.update(updates);
+
+    logOperation('Perfil actualizado exitosamente', {
+      userId: user.id,
+      email: user.email,
+      updatedFields: Object.keys(updates)
+    });
+
+    // Retornar datos actualizados (sin password)
+    const updatedUser = {
       id: user.id,
       name: user.name,
       email: user.email,
-      createdAt: user.createdAt
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    };
+
+    res.status(200).json({
+      message: 'Perfil actualizado exitosamente',
+      user: updatedUser
     });
+
   } catch (error) {
-    handleError(res, error, 'Error al obtener información del usuario');
-  }
-};
+    console.error('❌ Error al actualizar perfil:', error);
 
-exports.forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-    logOperation('Forgot Password', { email });
-
-    // Validar que el email esté presente
-    if (!email) {
+    // Errores de validación de Sequelize
+    if (error.name === 'SequelizeValidationError') {
+      const errors = error.errors.map(err => ({
+        field: err.path,
+        message: err.message
+      }));
       return res.status(400).json({
-        message: 'El correo electrónico es requerido',
+        message: 'Error de validación',
+        errors
+      });
+    }
+
+    // Error de email único
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({
+        message: 'Este correo electrónico ya está en uso',
         field: 'email'
       });
     }
 
-    // Buscar usuario por email
-    const user = await User.findOne({
-      where: { email: email.toLowerCase().trim() }
-    });
-
-    // Por seguridad, siempre devolver el mismo mensaje
-    // incluso si el usuario no existe
-    const successMessage = 'Si existe una cuenta con este correo, recibirás instrucciones para restablecer tu contraseña';
-
-    if (!user) {
-      logOperation('Forgot Password - Usuario no encontrado', { email });
-      return res.status(200).json({ message: successMessage });
-    }
-
-    // Generar token de reseteo (criptográficamente seguro)
-    const resetToken = crypto.randomBytes(32).toString('hex');
-
-    // Hash del token antes de guardarlo en la base de datos
-    const hashedToken = crypto
-      .createHash('sha256')
-      .update(resetToken)
-      .digest('hex');
-
-    // Guardar token hasheado y fecha de expiración (1 hora)
-    user.resetPasswordToken = hashedToken;
-    user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hora
-    await user.save({ validate: false }); // No validar password al guardar
-
-    // Enviar email con el token original (no hasheado)
-    try {
-      await sendPasswordResetEmail(user.email, resetToken, user.name);
-      logOperation('Email de reseteo enviado', { userId: user.id, email: user.email });
-    } catch (emailError) {
-      console.error('Error al enviar email:', emailError);
-      // Limpiar token si el email falló
-      user.resetPasswordToken = null;
-      user.resetPasswordExpires = null;
-      await user.save({ validate: false });
-
-      return res.status(500).json({
-        message: 'No se pudo enviar el correo de recuperación. Por favor, inténtalo más tarde.'
-      });
-    }
-
-    res.status(200).json({ message: successMessage });
-  } catch (error) {
-    handleError(res, error, 'Error al procesar solicitud de reseteo de contraseña');
+    handleError(res, error, 'Error al actualizar el perfil');
   }
 };
 
-exports.resetPassword = async (req, res) => {
+/**
+ * Eliminar cuenta de usuario
+ */
+exports.deleteAccount = async (req, res) => {
   try {
-    const { token } = req.params;
     const { password } = req.body;
 
-    logOperation('Reset Password', { token: token.substring(0, 10) + '...' });
-
-    // Validar que la contraseña esté presente
     if (!password) {
       return res.status(400).json({
-        message: 'La nueva contraseña es requerida',
+        message: 'Debe proporcionar su contraseña para eliminar su cuenta',
         field: 'password'
       });
     }
 
-    // Hash del token recibido
-    const hashedToken = crypto
-      .createHash('sha256')
-      .update(token)
-      .digest('hex');
-
-    // Buscar usuario con token válido y no expirado
-    const user = await User.findOne({
-      where: {
-        resetPasswordToken: hashedToken,
-      }
-    });
+    // Buscar usuario
+    const user = await User.findByPk(req.user.id);
 
     if (!user) {
-      return res.status(400).json({
-        message: 'Token de reseteo inválido o expirado'
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Verificar contraseña
+    const isPasswordValid = await user.matchPassword(password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        message: 'Contraseña incorrecta',
+        field: 'password'
       });
     }
 
-    // Verificar si el token expiró
-    if (user.resetPasswordExpires < new Date()) {
-      // Limpiar token expirado
-      user.resetPasswordToken = null;
-      user.resetPasswordExpires = null;
-      await user.save({ validate: false });
+    logOperation('Usuario eliminado', {
+      userId: user.id,
+      email: user.email
+    });
 
-      return res.status(400).json({
-        message: 'El token de reseteo ha expirado. Por favor, solicita uno nuevo.'
-      });
-    }
-
-    // Actualizar contraseña
-    user.password = password; // Se hasheará automáticamente en el hook beforeUpdate
-    user.resetPasswordToken = null;
-    user.resetPasswordExpires = null;
-
-    await user.save(); // Validar la nueva contraseña
-
-    // Enviar email de confirmación
-    try {
-      await sendPasswordChangedEmail(user.email, user.name);
-    } catch (emailError) {
-      console.error('Error al enviar email de confirmación:', emailError);
-      // No fallar si el email de confirmación falla
-    }
-
-    logOperation('Contraseña restablecida exitosamente', { userId: user.id });
+    // Eliminar usuario (CASCADE eliminará sus hipótesis automáticamente)
+    await user.destroy();
 
     res.status(200).json({
-      message: 'Tu contraseña ha sido restablecida exitosamente. Ahora puedes iniciar sesión.'
+      message: 'Cuenta eliminada exitosamente'
     });
+
   } catch (error) {
-    // Manejar errores de validación de Sequelize
-    if (error.name === 'SequelizeValidationError') {
-      const validationErrors = error.errors.map(err => ({
-        field: err.path,
-        message: err.message
-      }));
-
-      return res.status(400).json({
-        message: 'Error de validación en la nueva contraseña',
-        errors: validationErrors
-      });
-    }
-
-    handleError(res, error, 'Error al restablecer contraseña');
+    console.error('❌ Error al eliminar cuenta:', error);
+    handleError(res, error, 'Error al eliminar la cuenta');
   }
 };
