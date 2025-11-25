@@ -6,41 +6,68 @@ const config = require('./config');
 
 class StorageModule {
   constructor(contextGenerator, vectorOps) {
-    this.chromaClient = new ChromaClient({
-      path: config.CHROMADB_URL
-    });
+    // Configuración para ChromaDB remoto (Railway)
+    const chromaUrl = config.CHROMADB_URL;
+
+    // Parsear la URL para extraer host y puerto
+    let chromaConfig;
+    if (chromaUrl.startsWith('http://') || chromaUrl.startsWith('https://')) {
+      // URL remota (Railway, producción)
+      chromaConfig = { path: chromaUrl };
+    } else {
+      // Localhost o path local
+      chromaConfig = { path: chromaUrl };
+    }
+
+    this.chromaClient = new ChromaClient(chromaConfig);
     this.contextGenerator = contextGenerator;
     this.vectorOps = vectorOps;
+
+    console.log(`ChromaDB conectando a: ${chromaUrl}`);
   }
 
   // Módulo de almacenamiento
   async storeArtifactContext(artifact) {
     try {
+      console.log(`[ChromaDB] Iniciando almacenamiento para artefacto ${artifact.id}...`);
+
       const collection = await this.getOrCreateCollection(artifact.hypothesisId);
+      console.log(`[ChromaDB] Colección obtenida/creada para hipótesis ${artifact.hypothesisId}`);
+
       const contextData = this.contextGenerator.generateArtifactContext(artifact);
       const embedding = await this.vectorOps.generateEmbedding(contextData);
-      
+      console.log(`[ChromaDB] Embedding generado, tamaño: ${embedding.length}`);
+
       await this.storeInChroma(collection, artifact, contextData, embedding);
+      console.log(`[ChromaDB] Guardado en ChromaDB exitoso`);
+
       await this.storeInDatabase(artifact, contextData, embedding);
-      
-      console.log(`Contexto almacenado para artefacto ${artifact.id}`);
+      console.log(`[ChromaDB] Guardado en PostgreSQL exitoso`);
+
+      console.log(`[ChromaDB] Contexto almacenado completamente para artefacto ${artifact.id}`);
       return true;
     } catch (error) {
-      console.error(`Error al almacenar contexto del artefacto ${artifact.id}:`, error);
+      console.error(`[ChromaDB] ERROR al almacenar contexto del artefacto ${artifact.id}:`);
+      console.error(`[ChromaDB] Mensaje: ${error.message}`);
+      console.error(`[ChromaDB] Stack: ${error.stack}`);
       return false;
     }
   }
 
   async getOrCreateCollection(hypothesisId) {
     const collectionName = `hypothesis_${hypothesisId}`;
-    
+
     try {
-      return await this.chromaClient.getCollection({ name: collectionName });
-    } catch (error) {
-      return await this.chromaClient.createCollection({ 
+      // Primero intentar obtener la colección existente
+      const collection = await this.chromaClient.getOrCreateCollection({
         name: collectionName,
         metadata: { description: `Contexto de artefactos para hipótesis ${hypothesisId}` }
       });
+      console.log(`[ChromaDB] Colección '${collectionName}' lista`);
+      return collection;
+    } catch (error) {
+      console.error(`[ChromaDB] Error al obtener/crear colección '${collectionName}':`, error.message);
+      throw error;
     }
   }
 

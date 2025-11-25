@@ -14,6 +14,23 @@ const swaggerSpec = require('./config/swagger');
 // Cargar variables de entorno ANTES de todo
 dotenv.config();
 
+// Validar variables de entorno críticas
+const { validateEnv, getEnvSummary } = require('./utils/validateEnv');
+try {
+  validateEnv();
+  const envSummary = getEnvSummary();
+  console.log('🚀 Configuración del entorno:');
+  console.log(`   - Modo: ${envSummary.nodeEnv}`);
+  console.log(`   - Puerto: ${envSummary.port}`);
+  console.log(`   - Base de datos: ${envSummary.database.name}@${envSummary.database.host}`);
+  console.log(`   - AI habilitado: ${envSummary.features.aiEnabled ? '✅' : '❌'}`);
+  console.log(`   - ChromaDB habilitado: ${envSummary.features.chromaDBEnabled ? '✅' : '❌'}`);
+  console.log(`   - Email habilitado: ${envSummary.features.emailEnabled ? '✅' : '❌'}\n`);
+} catch (error) {
+  console.error(error.message);
+  process.exit(1); // Terminar la aplicación si faltan variables críticas
+}
+
 const app = express();
 
 // ===== SEGURIDAD =====

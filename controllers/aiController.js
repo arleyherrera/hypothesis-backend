@@ -6,11 +6,11 @@ const { getSpecificPrompt } = require('./aiPrompts');
 require('dotenv').config();
 
 const AI_CONFIG = {
-  SERVICE_URL: process.env.AI_SERVICE_URL || 'https://api.deepseek.com/v1/chat/completions',
+  SERVICE_URL: process.env.AI_SERVICE_URL || 'https://api.groq.com/openai/v1/chat/completions',
   API_KEY: process.env.AI_API_KEY,
-  MODEL: "deepseek-chat",
-  TEMPERATURE: 0.7,
-  MAX_TOKENS: 2000
+  MODEL: process.env.AI_MODEL || "llama-3.3-70b-versatile",
+  TEMPERATURE: parseFloat(process.env.AI_TEMPERATURE) || 0.7,
+  MAX_TOKENS: parseInt(process.env.AI_MAX_TOKENS) || 2000
 };
 
 const ARTIFACT_TEMPLATES = require('./artifactTemplates');
