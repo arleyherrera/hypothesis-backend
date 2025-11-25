@@ -6,29 +6,113 @@ const { getSpecificPrompt } = require('./aiPrompts');
 require('dotenv').config();
 
 const AI_CONFIG = {
-  SERVICE_URL: process.env.AI_SERVICE_URL || 'https://api.groq.com/openai/v1/chat/completions',
+  SERVICE_URL: process.env.AI_SERVICE_URL || 'https://api.anthropic.com/v1/messages',
   API_KEY: process.env.AI_API_KEY,
-  MODEL: process.env.AI_MODEL || "llama-3.3-70b-versatile",
+  MODEL: process.env.AI_MODEL || "claude-3-haiku-20240307",
   TEMPERATURE: parseFloat(process.env.AI_TEMPERATURE) || 0.7,
-  MAX_TOKENS: parseInt(process.env.AI_MAX_TOKENS) || 2000
+  MAX_TOKENS: parseInt(process.env.AI_MAX_TOKENS) || 4000,
+  TIMEOUT: parseInt(process.env.AI_TIMEOUT) || 60000,
+  MAX_RETRIES: parseInt(process.env.AI_MAX_RETRIES) || 3,
+  RETRY_DELAY: parseInt(process.env.AI_RETRY_DELAY) || 2000,
+  DELAY_BETWEEN_ARTIFACTS: parseInt(process.env.AI_DELAY_BETWEEN) || 1000, // 1 segundo (Anthropic no tiene rate limit agresivo)
+  PROVIDER: process.env.AI_PROVIDER || 'anthropic' // 'anthropic' o 'openai-compatible'
 };
 
 const ARTIFACT_TEMPLATES = require('./artifactTemplates');
 
-const createAIRequest = async (prompt) => {
-  return axios.post(
-    AI_CONFIG.SERVICE_URL,
-    {
+// Función de delay para esperas
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Función para crear request a la IA con reintentos (soporta Anthropic y OpenAI-compatible)
+const createAIRequest = async (prompt, retryCount = 0) => {
+  try {
+    const isAnthropic = AI_CONFIG.PROVIDER === 'anthropic';
+    const systemMessage = "Eres un consultor experto en metodología Lean Startup con amplia experiencia ayudando a startups a validar sus hipótesis. Generas artefactos coherentes que se integran perfectamente con el trabajo previo, manteniendo consistencia tanto dentro de cada fase como entre fases diferentes.";
+
+    // Configurar body según el proveedor
+    const requestBody = isAnthropic ? {
+      model: AI_CONFIG.MODEL,
+      max_tokens: AI_CONFIG.MAX_TOKENS,
+      system: systemMessage,
+      messages: [
+        { role: "user", content: prompt }
+      ]
+    } : {
       model: AI_CONFIG.MODEL,
       messages: [
-        { role: "system", content: "Eres un consultor experto en metodología Lean Startup con amplia experiencia ayudando a startups a validar sus hipótesis. Generas artefactos coherentes que se integran perfectamente con el trabajo previo, manteniendo consistencia tanto dentro de cada fase como entre fases diferentes." },
+        { role: "system", content: systemMessage },
         { role: "user", content: prompt }
       ],
       temperature: AI_CONFIG.TEMPERATURE,
       max_tokens: AI_CONFIG.MAX_TOKENS
-    },
-    { headers: { 'Authorization': `Bearer ${AI_CONFIG.API_KEY}`, 'Content-Type': 'application/json' } }
-  );
+    };
+
+    // Configurar headers según el proveedor
+    const headers = isAnthropic ? {
+      'x-api-key': AI_CONFIG.API_KEY,
+      'Content-Type': 'application/json',
+      'anthropic-version': '2023-06-01'
+    } : {
+      'Authorization': `Bearer ${AI_CONFIG.API_KEY}`,
+      'Content-Type': 'application/json'
+    };
+
+    const response = await axios.post(
+      AI_CONFIG.SERVICE_URL,
+      requestBody,
+      { headers, timeout: AI_CONFIG.TIMEOUT }
+    );
+
+    // Normalizar respuesta para que sea consistente
+    if (isAnthropic) {
+      // Convertir formato Anthropic a formato OpenAI-like para compatibilidad
+      response.data = {
+        choices: [{
+          message: {
+            content: response.data.content[0].text
+          }
+        }]
+      };
+    }
+
+    return response;
+  } catch (error) {
+    const isRetryable = isRetryableError(error);
+
+    console.error(`[IA] Error en request (intento ${retryCount + 1}/${AI_CONFIG.MAX_RETRIES}):`, {
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data,
+      retryable: isRetryable
+    });
+
+    // Si es un error recuperable y no hemos excedido los reintentos
+    if (isRetryable && retryCount < AI_CONFIG.MAX_RETRIES - 1) {
+      const waitTime = AI_CONFIG.RETRY_DELAY * Math.pow(2, retryCount);
+      console.log(`[IA] Reintentando en ${waitTime}ms...`);
+      await delay(waitTime);
+      return createAIRequest(prompt, retryCount + 1);
+    }
+
+    throw error;
+  }
+};
+
+// Determinar si el error es recuperable
+const isRetryableError = (error) => {
+  // Errores de red o timeout
+  if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT' || error.code === 'ENOTFOUND') {
+    return true;
+  }
+
+  // Errores HTTP recuperables
+  const status = error.response?.status;
+  if (status) {
+    // 429: Rate limit, 500-503: Errores del servidor
+    return status === 429 || status === 500 || status === 502 || status === 503;
+  }
+
+  return false;
 };
 
 const buildBasePrompt = (phase, hypothesisData, artifactName) => `
@@ -194,28 +278,41 @@ const generateArtifactWithAI = async (req, res) => {
     const artifactsForPhase = ARTIFACT_TEMPLATES.artifactTypes[phase];
     const createdArtifacts = [];
     
-    for (const artifactType of artifactsForPhase) {
+    for (let i = 0; i < artifactsForPhase.length; i++) {
+      const artifactType = artifactsForPhase[i];
       try {
-        console.log(`Generando ${artifactType.name}...`);
+        console.log(`[${i + 1}/${artifactsForPhase.length}] Generando ${artifactType.name}...`);
         const prompt = await generatePrompt(phase, hypothesis, artifactType.name);
         console.log('Prompt generado, llamando a IA...');
-        
+
         const aiResponse = await createAIRequest(prompt);
         console.log('Respuesta IA recibida');
-        
+
         const content = aiResponse.data.choices[0].message.content;
-        
+
         const artifact = await createArtifact(hypothesisId, phase, artifactType, content, ' (IA)');
         await storeVectorContext(artifact);
         createdArtifacts.push(artifact);
-        console.log(`✓ ${artifactType.name} generado exitosamente`);
+        console.log(`✓ [${i + 1}/${artifactsForPhase.length}] ${artifactType.name} generado exitosamente`);
+
+        // Delay entre artefactos para evitar rate limiting (excepto en el último)
+        if (i < artifactsForPhase.length - 1) {
+          console.log(`[IA] Esperando ${AI_CONFIG.DELAY_BETWEEN_ARTIFACTS}ms antes del siguiente artefacto...`);
+          await delay(AI_CONFIG.DELAY_BETWEEN_ARTIFACTS);
+        }
       } catch (error) {
-        console.error(`Error generando ${artifactType.name}:`, {
+        console.error(`✗ Error generando ${artifactType.name}:`, {
           message: error.message,
           response: error.response?.data,
-          status: error.response?.status,
-          stack: error.stack
+          status: error.response?.status
         });
+
+        // Si es rate limit, esperar más tiempo y continuar
+        if (error.response?.status === 429) {
+          const retryAfter = parseInt(error.response.headers?.['retry-after']) || 30;
+          console.log(`[IA] Rate limit alcanzado. Esperando ${retryAfter} segundos...`);
+          await delay(retryAfter * 1000);
+        }
       }
     }
     
