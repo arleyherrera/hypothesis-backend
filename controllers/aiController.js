@@ -128,13 +128,22 @@ DETALLES DE LA HIPÓTESIS:
 - Propuesta de Valor: ${hypothesisData.valueProposition}
 - Nombre del Proyecto: ${hypothesisData.name}
 
-IMPORTANTE: 
+CONTEXTO GEOGRÁFICO - PERÚ:
+- Toda la información, datos, estadísticas y ejemplos deben ser específicos para PERÚ
+- Usa datos del mercado peruano (INEI, SUNAT, estudios locales)
+- Considera la realidad económica y social peruana
+- Menciona ciudades peruanas relevantes (Lima, Arequipa, Trujillo, Cusco, etc.)
+- Usa precios y costos en Soles (S/) cuando corresponda
+- Considera el comportamiento del consumidor peruano
+- Referencia empresas, startups o casos de éxito peruanos cuando sea relevante
+
+IMPORTANTE:
 - Este artefacto debe estar COMPLETAMENTE BASADO en el PROBLEMA descrito arriba
 - TODO el contenido debe partir del problema como punto central
 - La solución y todos los elementos deben responder directamente a este problema
-- NO generes ejemplos genéricos, todo debe ser específico para ESTE problema
+- NO generes ejemplos genéricos, todo debe ser específico para ESTE problema Y para PERÚ
 
-Genera contenido detallado y personalizado basándote en el problema específico identificado.
+Genera contenido detallado y personalizado basándote en el problema específico identificado y el contexto peruano.
 `;
 
 const getContextualPrompt = async (hypothesisId, phase, artifactName) => {
@@ -654,12 +663,21 @@ const generateHypothesisFromProblem = async (req, res) => {
     }
     
     const prompt = `
-Actúa como un experto en Lean Startup y emprendimiento con 10 años de experiencia validando hipótesis de negocio.
+Actúa como un experto en Lean Startup y emprendimiento con 10 años de experiencia validando hipótesis de negocio EN PERÚ.
 
 PROBLEMA IDENTIFICADO:
 "${problem}"
 
-Tu tarea es transformar este problema en 3 hipótesis TESTABLES siguiendo la metodología Lean Startup.
+CONTEXTO OBLIGATORIO - PERÚ:
+- Todas las hipótesis deben estar contextualizadas para el mercado PERUANO
+- Usa datos y estadísticas de Perú (INEI, SUNAT, estudios locales)
+- Los segmentos de clientes deben ser peruanos (menciona ciudades: Lima, Arequipa, Trujillo, Cusco, etc.)
+- Los precios deben estar en Soles (S/)
+- Considera la realidad económica, social y cultural peruana
+- Menciona lugares específicos donde encontrar clientes en Perú (redes sociales peruanas, mercados, universidades, etc.)
+- Referencia casos de éxito de startups peruanas cuando sea relevante
+
+Tu tarea es transformar este problema en 3 hipótesis TESTABLES siguiendo la metodología Lean Startup, específicamente para el contexto peruano.
 
 IMPORTANTE - Cada hipótesis debe seguir EXACTAMENTE esta estructura para el campo 'name':
 "Creemos que [segmento específico] tiene el problema de [problema claro].
@@ -705,17 +723,17 @@ Para cada opción, genera:
    - Por qué es 10x mejor que la alternativa actual
    - Qué métrica validaría el éxito
 
-EJEMPLO DE FORMATO ESPERADO (name con máximo 255 caracteres):
+EJEMPLO DE FORMATO ESPERADO (name con máximo 255 caracteres) - CONTEXTO PERÚ:
 Si el problema fuera "Los freelancers pierden tiempo haciendo facturas manualmente":
 
-name: "Creemos que diseñadores freelance 25-35 años tienen el problema de perder 4h/semana en facturas. Si les ofrecemos app móvil de facturas en 1 click, entonces reducirán a 10min y pagarán $5/mes"
-(Ejemplo: 198 caracteres)
+name: "Creemos que diseñadores freelance 25-35 años en Lima tienen el problema de perder 4h/semana en facturas. Si les ofrecemos app móvil de facturas en 1 click, entonces reducirán a 10min y pagarán S/15/mes"
+(Ejemplo: 210 caracteres)
 
-solution: "App móvil minimalista que genera facturas profesionales. Características: 1) Plantillas prediseñadas, 2) Cálculo automático de impuestos, 3) Envío directo por WhatsApp. Implementación: PWA con React en 3 semanas"
+solution: "App móvil minimalista que genera facturas electrónicas SUNAT. Características: 1) Plantillas prediseñadas, 2) Cálculo automático de IGV, 3) Envío directo por WhatsApp. Implementación: PWA con React en 3 semanas"
 
-customerSegment: "Diseñadores gráficos freelance, 25-35 años, en ciudades grandes (CDMX, Guadalajara), que facturan 5-15 clientes/mes. Actualmente usan Excel. Encontrarlos en grupos de Facebook de diseñadores y coworkings creativos"
+customerSegment: "Diseñadores gráficos freelance, 25-35 años, en Lima Metropolitana y Arequipa, que facturan 5-15 clientes/mes. Actualmente usan Excel. Encontrarlos en grupos de Facebook de diseñadores peruanos, Domestika Perú y coworkings como Comunal o WeWork Lima"
 
-valueProposition: "Ahorra 15+ horas al mes (de 4 horas/semana a 10 min), permitiendo tomar 2 proyectos extra = $1000 USD más/mes. Es 10x mejor que Excel porque es móvil y automatizado. Métrica de éxito: 80% de usuarios activos después de 30 días"
+valueProposition: "Ahorra 15+ horas al mes (de 4 horas/semana a 10 min), permitiendo tomar 2 proyectos extra = S/3000 más/mes. Es 10x mejor que Excel porque es móvil y cumple con SUNAT. Métrica de éxito: 80% de usuarios activos después de 30 días"
 
 Responde ÚNICAMENTE con un JSON válido en este formato:
 {
